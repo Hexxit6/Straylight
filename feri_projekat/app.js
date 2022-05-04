@@ -15,8 +15,14 @@ var indexRouter = require('./routes/index');
 //var usersRouter = require('./routes/users');
 var stationRouter = require('./routes/stationRoutes');
 var dataRouter = require('./routes/dataRoutes');
+var commentRouter = require('./routes/commentRoutes');
 
 var app = express();
+
+var hbs = require('hbs');
+
+// register path to partials
+hbs.registerPartials(__dirname + '/views/partials');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -32,6 +38,7 @@ app.use('/', indexRouter);
 //app.use('/users', usersRouter);
 app.use('/stations', stationRouter);
 app.use('/data', dataRouter);
+app.use('/comment', commentRouter);
 
 
 var session = require('express-session');
