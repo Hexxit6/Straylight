@@ -12,7 +12,7 @@ var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var indexRouter = require('./routes/index');
-//var usersRouter = require('./routes/users');
+var userRouter = require('./routes/userRoutes');
 var stationRouter = require('./routes/stationRoutes');
 var dataRouter = require('./routes/dataRoutes');
 var commentRouter = require('./routes/commentRoutes');
@@ -34,15 +34,22 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+var session = require('express-session');
+var MongoStore = require('connect-mongo');
+app.use(session({
+	secret: 'nekaj',
+	resave: true,
+	saveUninitialized: false,
+	store: MongoStore.create({mongoUrl: mongoDB})
+}));
+
 app.use('/', indexRouter);
-//app.use('/users', usersRouter);
+app.use('/user', userRouter);
 app.use('/stations', stationRouter);
 app.use('/data', dataRouter);
 app.use('/comment', commentRouter);
 
 
-var session = require('express-session');
-var MongoStore = require('connect-mongo');
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
