@@ -1,4 +1,5 @@
 var UserModel = require('../models/userModel.js');
+var jwt = require('jsonwebtoken');
 
 /**
  * userController.js
@@ -91,6 +92,12 @@ module.exports = {
 				err.status = 401;
 				return next(err);
 			} else {
+				var token = jwt.sign({id: user._id, username: user.username}, process.env.TOKEN_SECRET);
+				res.cookie('jwt', token, {
+					httpOnly: false,
+					maxAge: 3600,
+					// secure: true
+				});
 				req.session.userId = user._id;
 				return res.redirect("/");
 			}
