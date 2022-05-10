@@ -1,0 +1,16 @@
+{{#each data}}
+    <p>Ime postaje: {{../station.address}}</p>
+    {{#each allergens}}
+        <form method="get" action="/data/singlePollutant/{{../fromStation}}/Birch">
+            <button type="submit">Birch</button>
+        </form>
+        <form method="get" action="/data/singlePollutant/{{../fromStation}}/Alder">
+            <button type="submit">Alder</button>
+        </form>
+    {{/each}}
+    {{#each pollutants}}
+        <form method="get" action="/data/singlePollutant/{{../fromStation}}/AQI">
+            <button type="submit">AQI</button>
+        </form>
+    {{/each}}
+{{/each}}

@@ -143,6 +143,25 @@ module.exports = {
     getPollutantFromSingleStation: function (req, res) {
         var id = req.params.id;
         var name = req.params.name;
+
+        DataModel.distinct("pollutants." + name, {fromStation: id}, function (err, pollutants) {
+
+            DataModel.distinct("allergens." + name, {fromStation: id}, function (err, allergens) {
+
+                //return res.json({pollutants: pollutants, allergens: allergens});
+                return res.render('data/allergens_and_pollutants', {
+                    pollutants: pollutants,
+                    allergens: allergens,
+                    name: name
+                });
+
+
+            })
+        });
+    },
+    /*getPollutantFromSingleStation: function (req, res) {
+        var id = req.params.id;
+        var name = req.params.name;
         console.log(name);
 
             DataModel.distinct("pollutants."+ name , {fromStation: id}, function (err, pollutants) {
@@ -161,4 +180,20 @@ module.exports = {
             })
         });
     }
+     */
+    getPollutantFromAllStations: function (req, res) {
+        var name = req.params.name;
+
+        DataModel.find({$or: [{['allergens.'+name]: null}, {['pollutants.'+name]: null}]}, {
+            ['allergens.' + name]: 1,
+            ['pollutants.' + name]: 1,
+            _id: 0
+        }).populate('fromStation').exec(function (err, datas) {
+            var data = [];
+            data.datas = datas;
+
+            return res.render('data/from_all_stations', {datas: datas, name:name});
+            //return res.json(datas);
+        });
+    },
 };

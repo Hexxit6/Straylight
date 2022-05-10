@@ -19,8 +19,10 @@ module.exports = {
                     error: err
                 });
             }
-
-            return res.json(stations);
+            var data = [];
+            data.stations = stations;
+            //return res.json(stations);
+            return res.render('station/all_stations', data)
         });
     },
 
@@ -31,7 +33,7 @@ module.exports = {
         var id = req.params.id;
         //req.session.stationID = id;
 
-        StationModel.findOne({_id: id},function (err, station) {
+        StationModel.findOne({_id: id}, function (err, station) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting station.',
@@ -51,8 +53,11 @@ module.exports = {
                         error: err
                     });
                 }
+                var data = []
+                data.datas = datas;
 
-            return res.json({station: station, data: datas});
+                //return res.json({station: station, data: datas});
+                return res.render('station/one_station', {station: station, data: datas});
             })});
     },
 
@@ -129,5 +134,6 @@ module.exports = {
 
             return res.status(204).json();
         });
-    }
+    },
+
 };
