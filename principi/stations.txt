@@ -1,0 +1,8 @@
+MB Titova,46.55913141617772,15.65618008375168,https://air-quality.com/place//e4016f73?lang=en&standard=aqi_us
+Kamnica,46.573074391145376,15.612140893936159,https://air-quality.com/place//7e05eb62?lang=en&standard=aqi_us
+MB Vrbanski,46.569074980877296,15.632088482379915,https://air-quality.com/place//c37426d5?lang=en&standard=aqi_us
+Koroška vrata,46.565875609137166,15.632203817367554,https://air-quality.com/place//99847d07?lang=en&standard=aqi_us
+Center,46.56595674827421,15.66601037979126,https://air-quality.com/place//d33611ea?lang=en&standard=aqi_us
+Maribor,46.554433,15.645862,https://air-quality.com/place//95149348?lang=en&standard=aqi_us
+Magdalena,46.553319709593964,15.644155740737915,https://air-quality.com/place//1de1468f?lang=en&standard=aqi_us
+Maribor,46.55033891661155,15.620273351669313,https://air-quality.com/place//bf68b2a3?lang=en&standard=aqi_us

@@ -8,7 +8,7 @@ var dataSchema = new Schema({
 		'PM10' : String,
 		'NO2' : String
 	}],
-	'alergens' : [{
+	'allergens' : [{
 		'Birch' : String,
 		'Alder' : String,
 		'Grasses' : String,

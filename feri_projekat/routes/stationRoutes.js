@@ -12,6 +12,7 @@ router.get('/', stationController.list);
  */
 router.get('/:id', stationController.show);
 
+
 /*
  * POST
  */

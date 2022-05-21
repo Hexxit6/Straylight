@@ -1,0 +1,52 @@
+Constructs(mandatory):
+    - Unit: nil
+    - Number: 1, 1.2, -0.13     -> all numbers are floats for simplicity's sake
+    - String: "S0m3th1ng_"      -> difference between a string and an identifier
+    - Point: (Number, Number)   -> a single point on a map
+    - Blocks:
+        city "name" {           -> city is the main block that contains the whole program (similar to main)
+            Blocks|Expressions
+        }
+        road "name" {           -> basic block type used for mapping the city
+            Expressions
+        }
+        building "name" {       -> basic block type used for mapping the city
+            Expressions
+        }
+                                -> all the blocks can hold variables, for loops, other blocks and... well... pretty much everything else
+    - Commands:                 -> commands are used inside blocks
+        line(Point, Point);
+        bend(Point, Point, Angle);
+        box(Point, Point);
+        circle(Point, Radius);
+
+Constructs(optional):
+    - Additional blocks: station, water, park, forest           -> the 'station' block will be a special block containing a color and a radius, others can have a color and are used to focus on allergen types and pollution
+    - Color: blue, teal, cyan, green, lime, yellow, pink, white, lightgray, gray, darkgray, black, olive, brown, orange, red, purple, magenta, violet   (predefined LaTeX colors)
+    - Color(): color(#color|Color); -> sets current block color
+    - Variables: let variable = Expression;
+    - Lists: [item1, item2, item3]                              -> useful for the 'for' loop and maybe polyline and polygon commands
+    - Flow:
+        if (Condition) {
+            Expressions
+        } elif (Condition) {
+            Expressions
+        } else {
+            Expression
+        }
+    - Loop:
+        for (Variable; Condition; Expression) {
+            Expressions (break, continue)
+        }
+    - Functions:
+        func name(arg1, arg2) {
+            Expressions
+        }
+    - Additional commands:
+        polyline(Points)                                        -> multiple points specifying a line
+        polygon(Points)                                         -> multiple points specifying a polygon or a number specifying a regular polygon
+
+
+[ BNF is a work-in-progress! ]
+-> some blocks are still not implement
+-> some things will have to be re-worked e.g. statements,expressions,literals and the 'for' loop (simplified or re-made from scratch)

@@ -1,0 +1,17 @@
+// Example 1:
+city Maribor {
+    let someVar = 0.3453;
+    let somevar2 = 123123.123123;
+    let _ = 0;
+}
+
+// Example 2:
+city Maribor {
+    if (condition) {
+        let nekaj = 1;
+    } elif (condition2) {
+        let nekaj = 2;
+    } else {
+        let nekaj = 3;
+    }
+}

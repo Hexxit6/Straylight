@@ -1,0 +1,13 @@
+{{#each datas}}
+    <p>Ime postaje: {{fromStation.address}}</p>
+    {{#each allergens}}
+        {{#if (lookup this ../../name)}}
+            <p>{{lookup this ../../name}}</p>
+        {{/if}}
+    {{/each}}
+    {{#each pollutants}}
+        {{#if (lookup this ../../name)}}
+            <p>{{lookup this ../../name}}</p>
+        {{/if}}
+    {{/each}}
+{{/each}}
