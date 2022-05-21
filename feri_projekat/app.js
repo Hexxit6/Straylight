@@ -18,6 +18,8 @@ var userRouter = require('./routes/userRoutes');
 var stationRouter = require('./routes/stationRoutes');
 var dataRouter = require('./routes/dataRoutes');
 var commentRouter = require('./routes/commentRoutes');
+var settingsRouter = require('./routes/settingsRoutes');
+var adminRouter = require('./routes/adminRoutes');
 
 var app = express();
 
@@ -50,7 +52,8 @@ app.use('/user', userRouter);
 app.use('/stations', stationRouter);
 app.use('/data', dataRouter);
 app.use('/comment', commentRouter);
-
+app.use('/settings', settingsRouter); 
+app.use('/admin', adminRouter); 
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

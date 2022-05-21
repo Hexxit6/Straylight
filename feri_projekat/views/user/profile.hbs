@@ -1,6 +1,46 @@
-<h1>Profil uporabnika</h1>
-<h3>Ime:</h3>
-<p>{{username}}</p>
-<h3>Email:</h3>
-<p>{{email}}</p>
-{{! <a type="button" href="logout">Odjava</a> }}
+<h1>Uporabnik:</h1>
+
+<label for="username">Ime:</label>
+<input type="text" name="username" value="{{username}}" />
+<br>
+<label for="email">Email:</label>
+<input type="text" name="email" value="{{email}}" />
+<br>
+<label for="password">Geslo:</label>
+<input type="password" name="password" />
+<br>
+<button name="update">Posodobi</button>
+
+<p>
+... USER SETTINGS ...
+</p>
+<p>
+... JWT TOKEN AND REGENERATION...
+</p>
+
+<script type="text/javascript">
+$(function(){
+	$("[name='update']").click(async function(){
+		const url = window.location.origin + "/user/{{_id}}";
+
+		const username = $("[name='username']").val();
+		const email = $("[name='email']").val();
+		const password = $("[name='password']").val();
+
+		const response = await fetch(url, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+						username: username,
+						email: email,
+						password: password
+				})
+		});
+
+		const data = await response.json();
+		window.location = window.location;
+	});
+});
+</script>
