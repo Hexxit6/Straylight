@@ -4,12 +4,37 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+
+var connection = require('./DatabaseUtil')
 var mongoose = require('mongoose');
-var mongoDB = 'mongodb://localhost:27017/feri_projekat';
-mongoose.connect(mongoDB);
+var mongoDB = connection;
+mongoose.connect(mongoDB, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
+
+/*
+const mongoose = require('mongoose')
+
+const url = `mongodb+srv://andjela:1234@projekat.skzv5.mongodb.net/projekat?retryWrites=true&w=majority`;
+
+const connectionParams={
+  useNewUrlParser: true,
+  //useCreateIndex: true,
+  useUnifiedTopology: true
+}
+mongoose.connect(url,connectionParams)
+    .then( () => {
+      console.log('Connected to the database ')
+    })
+    .catch( (err) => {
+      console.error(`Error connecting to the database. n${err}`);
+    })
+*/
 
 var indexRouter = require('./routes/index');
 //var usersRouter = require('./routes/users');
