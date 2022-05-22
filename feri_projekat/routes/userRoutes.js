@@ -6,7 +6,7 @@ var auth = require('../middleware/auth.js');
 /*
  * GET
  */
-router.get('/', userController.list);
+// router.get('/', userController.list);
 router.get('/profile', userController.profile);		// needs auth
 router.get('/login', userController.showLogin);
 router.get('/register', userController.showRegister);
@@ -19,6 +19,7 @@ router.get('/:id', userController.show);
  */
 router.post('/', userController.create);
 router.post('/login', userController.login);
+router.post('/JWTgen', userController.JWTgen);
 
 /*
  * PUT

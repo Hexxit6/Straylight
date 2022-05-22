@@ -1,1 +1,93 @@
-nekaj
+<h1>Settings:</h1>
+
+<br>
+<div class="input group mb-3">
+	{{! <form method="POST" action="" enctype="mutipart/form-data"> }}
+		<input class="form-control" type="file" name="file" />
+		<button name="stationsUpload" class="btn btn-primary">Upload stations file</button>
+	{{! </form> }}
+</div>
+
+<div class="input-group mb-3">
+	<input type="text" name="interval" class="form-control" />
+	<button name="intervalBtn" class="btn btn-primary">Set interval</button>
+</div>
+<br>
+
+<div>
+	<div class="form-check form-check-inline">
+		<label for="seconds" class="form-check-label">Seconds</label>
+		<input type="radio" name="seconds" class="form-check-input" value="seconds" />
+	</div>
+
+	<div class="form-check form-check-inline">
+		<label for="minutes" class="form-check-label">Minutes</label>
+		<input type="radio" name="minutes" class="form-check-input" value="minutes" />
+	</div>
+
+	<div class="form-check form-check-inline">
+		<label for="hours" class="form-check-label">Hours</label>
+		<input type="radio" name="hours" class="form-check-input" value="hours" />
+	</div>
+
+	<div class="form-check form-check-inline">
+		<label for="days" class="form-check-label">Days</label>
+		<input type="radio" name="days" class="form-check-input" value="days" />
+	</div>
+
+	<button name="unitBtn" class="btn btn-primary">Set units</button>
+</div>
+<br>
+
+<div class="input-group mb-3">
+	<input type="text" name="interval" class="form-control" />
+	<button name="tokenBtn" class="btn btn-primary">Set token</button>
+</div>
+<br>
+
+<button name="start" class="btn btn-success">Start</button>
+<button name="stop" class="btn btn-danger">Stop</button>
+<p id="error"></p>
+
+<script type="text/javascript">
+
+$(function(){
+	
+	$("[name='start']").click(async function(){
+		const url = window.location.origin + "/settings/start";
+		const response = await fetch(url, {
+			method: "POST"
+		});
+		const data = await response.json();
+	});
+
+	$("[name='stop']").click(async function(){
+		const url = window.location.origin + "/settings/stop";
+		const response = await fetch(url, {
+			method: "POST"
+		});
+		const data = await response.json();
+	});
+
+	$("[name='stationsUpload']").click(async function(){
+		const url = window.location.origin + "/settings/upload";
+
+		var formData = new FormData();
+		var file = $("[name='file']")[0].files[0];
+		formData.append('file', file);
+
+		const res = await fetch(url, {
+			method: 'POST',
+			body: formData
+		});
+		const data = await res.json();
+		if (data != 0) {
+			$('#error').val(data);
+		} else {
+			$('#error').val("Failed to upload!");
+		}
+	});
+
+});
+
+</script>

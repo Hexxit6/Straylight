@@ -12,7 +12,7 @@
 	<tbody>
 		{{#each users}}
 			<tr>
-				<td>{{username}}</td>
+				<td><a href="/user/{{_id}}">{{username}}</a></td>
 				<td>{{email}}</td>
 				<td><input type="checkbox" name="admin" id="{{_id}}" {{#if admin}}checked{{/if}} /></td>
 				<td><button name="delete" id="{{_id}}" class="btn btn-danger">Delete</button></td>
@@ -21,7 +21,7 @@
 	</tbody>
 </table>
 
-<script>
+<script type="text/javascript">
 $(function(){
 	
 	$("[name='delete']").click(async function(){
