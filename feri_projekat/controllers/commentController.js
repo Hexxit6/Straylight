@@ -1,4 +1,5 @@
 var CommentModel = require('../models/commentModel.js');
+const UserModel = require("../models/userModel");
 
 /**
  * commentController.js
@@ -51,24 +52,46 @@ module.exports = {
      * commentController.create()
      */
     create: function (req, res) {
-        var comment = new CommentModel({
-			content : req.body.content,
-			datetime : Date.now(),
-			name : req.body.name,
-			email : null,
-			id_user : null
-        });
+        let name = req.body.name;
+        let email = null;
+        let id_user = null;
 
-        comment.save(function (err, comment) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when creating comment',
-                    error: err
+
+        UserModel.findById(req.session.userId)
+            .exec(function (error, user) {
+                if (error) {
+                    return next(error);
+                } else {
+                    if (user !== null) {
+                        name = user.username;
+                        email = user.email;
+                        id_user = user.id;
+                    }
+                }
+
+
+                var comment = new CommentModel({
+                    content: req.body.content,
+                    datetime: Date.now(),
+                    name: name,
+                    email: email,
+                    id_user: id_user
                 });
-            }
 
-            return res.status(201).json(comment);
-        });
+                comment.save(function (err, comment) {
+                    if (err) {
+                        return res.status(500).json({
+                            message: 'Error when creating comment',
+                            error: err
+                        });
+                    }
+
+                    return res.status(201).json(comment);
+                });
+
+            });
+
+
     },
 
     /**
@@ -92,11 +115,11 @@ module.exports = {
             }
 
             comment.content = req.body.content ? req.body.content : comment.content;
-			comment.datetime = req.body.datetime ? req.body.datetime : comment.datetime;
-			comment.name = req.body.name ? req.body.name : comment.name;
-			comment.email = req.body.email ? req.body.email : comment.email;
-			comment.id_user = req.body.id_user ? req.body.id_user : comment.id_user;
-			
+            comment.datetime = req.body.datetime ? req.body.datetime : comment.datetime;
+            comment.name = req.body.name ? req.body.name : comment.name;
+            comment.email = req.body.email ? req.body.email : comment.email;
+            comment.id_user = req.body.id_user ? req.body.id_user : comment.id_user;
+
             comment.save(function (err, comment) {
                 if (err) {
                     return res.status(500).json({
@@ -128,66 +151,4 @@ module.exports = {
         });
     },
 
-    /**
-     * QuestionController.view()
-     */
-    view: function (req, res) {
-
-        commentModel.findOne({_id: req.params.id})
-            .populate('id_user')
-            .exec(function (err, Question) {
-                if (err) {
-                    return res.status(500).json({
-                        message: 'Error when getting Question.',
-                        error: err
-                    });
-                }
-
-                if (!Question) {
-                    return res.status(404).json({
-                        message: 'No such Question'
-                    });
-                }
-                comment.activeness++;
-                comment.save(function (err, Question) {
-                    if (err) {
-                        return res.status(500).json({
-                            message: 'Error when updating Question.',
-                            error: err
-                        });
-                    }
-                });
-
-
-                comment.canApprove = req.session.userId == comment.id_user.id;
-
-                AnswerModel.find({id_q: Question.id})
-                    .populate('id_user')
-                    .sort({status: 'desc', datetime: 'asc'})
-                    .exec(function (err, answers) {
-                        if (err) {
-                            return res.status(500).json({
-                                message: 'Error when getting answer.',
-                                error: err
-                            });
-                        }
-
-                        answers.map((answer) => answer.isMyAnswer = req.session.userId == answer.id_user.id);
-                        answers.map((answer) => {
-                            if((answer.upvote + answer.downvote) > 0) {
-                                answer.score = answer.upvote / (answer.upvote + answer.downvote)
-                            } else {
-                                answer.score = 0;
-                            }
-                        });
-
-                        Question.answers = answers;
-
-
-                        res.render('question/view', Question);
-                    });
-
-
-            });
-    },
 };

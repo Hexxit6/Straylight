@@ -7,7 +7,6 @@ var commentController = require('../controllers/commentController.js');
  */
 router.get('/', commentController.list);
 
-router.get('/view/:id', commentController.view);
 
 /*
  * GET

@@ -30,7 +30,7 @@ module.exports = {
     show: function (req, res) {
         var id = req.params.id;
 
-        DataModel.findOne({_id: id}, function (err, data) {
+        DataModel.findOne({fromStation: id}).sort({"date": -1}).exec(function (err, data) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting data.',
@@ -47,6 +47,29 @@ module.exports = {
             return res.json(data);
         });
     },
+
+
+    showAll: function (req, res) {
+        var id = req.params.id;
+
+        DataModel.find({fromStation: id}).sort({"date": -1}).exec(function (err, data) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting data.',
+                    error: err
+                });
+            }
+
+            if (!data) {
+                return res.status(404).json({
+                    message: 'No such data'
+                });
+            }
+
+            return res.json(data);
+        });
+    },
+
 
     /**
      * dataController.create()

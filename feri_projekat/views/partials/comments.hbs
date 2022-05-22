@@ -9,7 +9,13 @@
                 <div class="card-body p-4">
                     <div class="">
                         <label for="exampleDataList" class="form-label">Name</label>
-                        <input class="form-control" list="datalistOptions" id="name">
+                        {{#unless userName}}
+                            <input class="form-control" list="datalistOptions" id="name">
+                        {{/unless}}
+
+
+
+
 
                         <label for="exampleDataList" class="form-label">Comment</label>
                         <textarea class="form-control" id="content" rows="4"></textarea>

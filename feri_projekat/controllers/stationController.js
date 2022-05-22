@@ -26,6 +26,21 @@ module.exports = {
         });
     },
 
+    stations:  async function (req, res) {
+        StationModel.find().exec(function (err, stations) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting station.',
+                    error: err
+                });
+            }
+
+            return res.status(201).json(stations);
+
+            //return res.json(stations);
+        });
+    },
+
     /**
      * stationController.show()
      */
@@ -117,6 +132,8 @@ module.exports = {
             });
         });
     },
+
+
 
     /**
      * stationController.remove()

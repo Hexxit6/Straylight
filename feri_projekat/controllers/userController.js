@@ -76,7 +76,8 @@ module.exports = {
 						error.status = 401;
 						return next(error);
 					} else {
-						res.render('user/profile', user);
+                        user.userName = req.session.userName;
+                        res.render('user/profile', user);
 					}
 				}
 			});
@@ -99,6 +100,7 @@ module.exports = {
 					// secure: true
 				});
 				req.session.userId = user._id;
+                req.session.userName = user.username;
 				return res.redirect("/");
 			}
 		});

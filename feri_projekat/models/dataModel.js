@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Schema   = mongoose.Schema;
 
 var dataSchema = new Schema({
+	'date' : Date,
 	'pollutants' : [{
 		'AQI' : String,
 		'PM2_5' : String,

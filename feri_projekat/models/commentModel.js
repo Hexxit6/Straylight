@@ -6,7 +6,9 @@ var commentSchema = new Schema({
 	'datetime' : Date,
 	'name' : String,
 	'email' : String,
-	'id_user' : String,
+	'id_user' : {
+		type: Schema.Types.ObjectId,
+		ref: 'user'},
 	'id_station' : {
 		type: Schema.Types.ObjectId,
 		ref: 'station'}

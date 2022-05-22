@@ -6,7 +6,7 @@ var stationController = require('../controllers/stationController.js');
  * GET
  */
 router.get('/', stationController.list);
-
+router.get('/stations', stationController.stations);
 /*
  * GET
  */
