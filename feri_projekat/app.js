@@ -5,14 +5,15 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var connection = require('./DatabaseUtil');
 
 
 var connection = require('./DatabaseUtil')
 var mongoose = require('mongoose');
 var mongoDB = connection;
 mongoose.connect(mongoDB, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
+	useNewUrlParser: true,
+	useUnifiedTopology: true
 });
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
@@ -23,6 +24,8 @@ var userRouter = require('./routes/userRoutes');
 var stationRouter = require('./routes/stationRoutes');
 var dataRouter = require('./routes/dataRoutes');
 var commentRouter = require('./routes/commentRoutes');
+var settingsRouter = require('./routes/settingsRoutes');
+var adminRouter = require('./routes/adminRoutes');
 
 var app = express();
 
@@ -55,7 +58,8 @@ app.use('/user', userRouter);
 app.use('/stations', stationRouter);
 app.use('/data', dataRouter);
 app.use('/comment', commentRouter);
-
+app.use('/settings', settingsRouter); 
+app.use('/admin', adminRouter); 
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -73,4 +77,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+hbs.registerHelper('ifEquals', function(arg1, arg2, options) {
+    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+});
 module.exports = app;

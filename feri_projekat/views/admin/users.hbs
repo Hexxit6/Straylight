@@ -1,0 +1,54 @@
+<h1>Manage users:</h1>
+
+<table class="table">
+	<thead class="thead-dark">
+		<tr>
+			<th scope="col">Uporabniško ime</th>
+			<th scope="col">Email</th>
+			<th scope="col">Administrator</th>
+			<th scope="col"></th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each users}}
+			<tr>
+				<td><a href="/user/{{_id}}">{{username}}</a></td>
+				<td>{{email}}</td>
+				<td><input type="checkbox" name="admin" id="{{_id}}" {{#if admin}}checked{{/if}} /></td>
+				<td><button name="delete" id="{{_id}}" class="btn btn-danger">Delete</button></td>
+			</tr>
+		{{/each}}
+	</tbody>
+</table>
+
+<script type="text/javascript">
+$(function(){
+	
+	$("[name='delete']").click(async function(){
+		const url = window.location.origin + "/user/" + this.id;
+		const response = await fetch(url, {
+			method: "DELETE"
+		});
+		const data = await response.json();
+		window.location = window.location;
+	});
+
+	$("[name='admin']").change(async function(){
+		const url = window.location.origin + "/user/privileges/" + this.id;
+		const admin = $(this).is(":checked");
+
+		const response = await fetch(url, {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				admin: admin
+			})
+		});
+		const data = await response.json();
+		window.location = window.location;
+	});
+
+});
+</script>

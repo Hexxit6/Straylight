@@ -1,5 +1,163 @@
-<p>{{allergens}}</p>
-<p>{{pollutants}}</p>
-<form method="get" action="/data/singlePollutant/{{name}}">
-    <button type="submit">Get data from all stations</button>
-</form>
+<style>
+    .animated-progress {
+        width: 560px;
+        height: 15px;
+        border-radius: 5px;
+        margin: 20px 0px;
+        border: 1px solid black;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .animated-progress span {
+        height: 100%;
+        display: block;
+        width: 0;
+        color: rgb(255, 251, 251);
+        line-height: 30px;
+        position: absolute;
+        text-align: end;
+        padding-right: 5px;
+    }
+
+    .progress span {
+        background-color: lightgreen;
+    }
+
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-5 mx-auto" style="background-color: white">
+            <div style="border: 6px solid lightgreen;border-radius: 25px">
+                <h2 style="font-weight: bold;text-align: center">{{name}}
+                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal"><span class="glyphicon glyphicon-info-sign"></span>
+
+                    </button>
+                </h2>
+            </div>
+            <div style="background-color: lightgreen">
+                    {{#if (lookup data.allergens name)}}
+                        <h1 style="font-weight: bold;color: white;text-shadow: 0 0 2px black;text-align: center;padding: 60px 0;font-size: 60px">{{lookup data.allergens name}}</h1>
+                    {{else}}
+                        <h1 style="font-weight: bold;color: white;text-align: center;padding: 60px 0;font-size: 60px">{{lookup data.pollutants name}}</h1>
+                    {{/if}}
+            </div>
+            <form method="get" action="/data/singlePollutant/{{name}}">
+                <button type="submit" class="btn btn-secondary btn-lg btn-block">Get data from all stations</button>
+            </form>
+            {{#if (lookup data.allergens name)}}
+                <div class="animated-progress progress">
+                    <span data-progress="{{lookup data.allergens name}}"></span>
+                </div>
+            {{else}}
+                <div class="animated-progress progress">
+                    <span data-progress="{{lookup data.pollutants name}}"></span>
+                </div>
+            {{/if}}
+        </div>
+
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: lightgreen">
+                <h3 class="modal-title" id="exampleModalLabel" style="color: white;font-weight: bold">{{name}}</h3>
+            </div>
+            <div class="modal-body">
+                {{#ifEquals name "Birch"}}
+                    <p>Birch tree allergy symptoms can be similar to many other pollen allergies and may include:
+                    <ul>
+                    <li>Sneezing</li>
+                    <li>Nasal congestion</li>
+                    <li>Runny nose</li>
+                    <li>Watery eyes</li>
+                    <li>Itchy throat and eyes</li>
+                    <li>Wheezing</li>
+                    </ul></p>
+                    <p>Birch trees are short-lived ornamental and timber trees found
+                        in cool regions of the Northern Hemisphere. Hardy, quick growing, and relatively
+                        immune to disease and insect attack, birch trees were among the first trees to become
+                        established after the glaciers receded.1 Annual pollen counts may vary from year to year
+                        by a factor of 400 percent.2 Birch trees are wind pollinated, and pollen levels are determined
+                        by the weather, diversity of local flora, and specific rhythms of pollination of particular taxa, or groups</p>
+                {{/ifEquals}}
+
+                {{#ifEquals name "Alder"}}
+                    <p>This is one of the first pollen wave of the year. In this period, there is a confusion
+                        between the symptoms of hay fever and those of a common cold.
+                        Cross-reactive allergy: there is cross-reactive allergy between the
+                        pollens of the different Betulaceae species (alder, hazel and birch). Therefore,
+                        individuals allergic to birch pollen may also experience allergy symptoms at the beginning of the year,
+                        when the concentrations of alder and hazel pollens are very high.</p>
+                {{/ifEquals}}
+                {{#ifEquals name "Mugwort"}}
+                    <p>Mugwort allergy symptoms can be similar to many other pollen allergies and may include:
+                    <ul>
+                        <li>Sneezing</li>
+                        <li>Nasal congestion</li>
+                        <li>Runny nose</li>
+                        <li>Watery eyes</li>
+                        <li>Itchy throat and eyes</li>
+                        <li>Wheezing</li>
+                    </ul></p>
+                <p>Mugwort produces large amounts of wind-borne pollen, which is severely allergenic.
+                    During the mugwort pollen seasons of late summer and fall, mugwort pollen is one of the main causes of
+                    allergic reactions in Europe, where it affects roughly 10 to 15 percent of patients suffering from pollinosis.</p>
+                {{/ifEquals}}
+                {{#ifEquals name "Grasses"}}
+                    <p>The most common grass pollen allergy symptoms include3:
+                    <ul>
+                        <li>Itchy eyes/throat</li>
+                        <li>Sneezing</li>
+                        <li>Blocked/runny nose</li>
+                        <li>Watering, red eyes (allergic conjunctivitis)</li>
+                        <li>Headaches</li>
+                        <li>Blocked sinuses</li>
+                        <li>Post-nasal drip</li>
+                </ul></p>
+                {{/ifEquals}}
+                {{#ifEquals name "NO2"}}
+                    <p>Nitrogen dioxide (NO2) belongs to the group of reactive gases and has an irritating
+                        effect on the lower respiratory tract. In the case of measuring points in the immediate
+                        vicinity of busy roads, traffic is their main source. Exceedances of the annual limit value in
+                        2017 occurred only at the measuring point in Ljubljana.</p>
+                {{/ifEquals}}
+                {{#ifEquals name "PM10"}}
+                    <p>PM10 are microscopically small fragments of solid or liquid matter up to 10 micrometers in size.
+                        PM10 pollution is highly dependent on weather conditions, exceeding the daily limit value (50 µg / m3)
+                        is almost exclusively limited to the cold part of the year - the reason for this is unfavorable
+                        conditions for diluting emissions, pollution of small combustion plants and traffic. As a rule,
+                        the prescribed annual limit value (40 µg / m3) was not exceeded anywhere in Slovenia, while the
+                        recommended value of the World Health Organization (20 µg / m3) was exceeded at almost all measuring
+                        points in Slovenia.
+                       </p>
+                {{/ifEquals}}
+            </div>
+            <div class="modal-footer" style="background-color: lightgreen">
+                <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    $(".animated-progress span").each(function () {
+        $(this).animate(
+                {
+                    width: $(this).attr("data-progress") + "%",
+                },
+                100
+        );
+    });
+    $("#btn").click(function () {
+        $('.alert').show();
+    });
+
+</script>
