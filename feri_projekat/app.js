@@ -5,10 +5,14 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var connection = require('./DatabaseUtil');
 
 var mongoose = require('mongoose');
-var mongoDB = process.env.DB;
-mongoose.connect(mongoDB);
+var mongoDB = connection;
+mongoose.connect(mongoDB, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true
+});
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -71,4 +75,7 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+hbs.registerHelper('ifEquals', function(arg1, arg2, options) {
+    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+});
 module.exports = app;
