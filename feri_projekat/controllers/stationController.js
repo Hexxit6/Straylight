@@ -31,7 +31,7 @@ module.exports = {
      */
     show: function (req, res) {
         var id = req.params.id;
-        //req.session.stationID = id;
+        req.session.stationID = id;
 
         StationModel.findOne({_id: id}, function (err, station) {
             if (err) {
@@ -134,6 +134,6 @@ module.exports = {
 
             return res.status(204).json();
         });
-    },
+    }
 
 };
