@@ -1,13 +1,50 @@
+<style>
+    .list-group-item {background-color: brown; margin: 5px;color: white; font-size: 18px}
+    @keyframes check {0% {height: 0;width: 0;}
+        25% {height: 0;width: 10px;}
+        50% {height: 20px;width: 10px;}
+    }
+    .checkbox{background-color:#fff;display:inline-block;height:28px;margin:0 .25em;width:28px;border-radius:4px;border:1px solid #ccc;float:right}
+    .checkbox span{display:block;height:28px;position:relative;width:28px;padding:0}
+    .checkbox span:after{-moz-transform:scaleX(-1) rotate(135deg);-ms-transform:scaleX(-1) rotate(135deg);-webkit-transform:scaleX(-1) rotate(135deg);transform:scaleX(-1) rotate(135deg);-moz-transform-origin:left top;-ms-transform-origin:left top;-webkit-transform-origin:left top;transform-origin:left top;border-right:4px solid #fff;border-top:4px solid #fff;content:'';display:block;height:20px;left:3px;position:absolute;top:15px;width:10px}
+    .checkbox span:hover:after{border-color:#999}
+    .checkbox input{display:none}
+    .checkbox input:checked + span:after{-webkit-animation:check .8s;-moz-animation:check .8s;-o-animation:check .8s;animation:check .8s;border-color:#555}
+    .checkbox input:checked + .default:after{border-color:#444}
+
+    .form-check {width: 50px;}
+    .form-check-label {font-size: 18px}
+
+</style>
 
 <div class="container-fluid" style="background-color: lightgreen">
     <div class="row">
+        <!-- Checkbox forms -->
+        <div class="col-sm-3" style="text-align: center">
+            <h4 style="font-weight: bold">Find where {{name}} is greater than:</h4>
+            <form method="get" action="/data/greater/{{name}}">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="tag" value="2">
+                    <label class="form-check-label" for="2">2</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="tag" value="5">
+                    <label class="form-check-label" for="5">5</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="tag" value="10">
+                    <label class="form-check-label" for="10">10</label>
+                </div>
+                <button type="submit" class="btn btn-secondary" id="greater">Search</button>
+            </form>
+        </div>
         <div class="col-sm-6 mx-auto" style="background-color: white">
-        <h1 style="text-align: center;font-weight: bold">{{name}}</h1>
+            <h1 style="text-align: center;font-weight: bold">{{name}}</h1>
             {{#each datas}}
                 <h2 style="text-align: center;font-weight: bold;color: brown">{{fromStation.address}}</h2>
                 {{#if (lookup allergens ../name)}}
-                    <div class="circle-rounded" style="background-color: lightgreen">
-                    <h3 style="text-align: center;font-weight: bold;">{{lookup allergens ../name}}</h3>
+                    <div style="background-color: lightgreen">
+                        <h3 style="text-align: center;font-weight: bold;">{{lookup allergens ../name}}</h3>
                     </div>
                 {{/if}}
                 {{#if (lookup pollutants ../name)}}
@@ -15,6 +52,75 @@
                 {{/if}}
             {{/each}}
         </div>
+        <!-- Checkbox form -->
+        <div class="col-sm-3">
+            <form method="get" action="/data/search/{{name}}">
+                <div class="card-header" style="font-size: 22px; text-align: center; font-weight: bold">Stations:</div>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        MB Titova
+                        <label class="checkbox">
+                            <input type="checkbox" name="tag" value="MB Titova" />
+                            <span class="default"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        MB Vrbanski
+                        <label class="checkbox">
+                            <input type="checkbox" name="tag" value="MB Vrbanski" />
+                            <span class="default"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        Koroška vrata
+                        <label class="checkbox">
+                            <input type="checkbox" name="tag" value="Koroška vrata" />
+                            <span class="default"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        Tezno
+                        <label class="checkbox">
+                            <input type="checkbox" name="tag" value="Tezno"/>
+                            <span class="default"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        Center
+                        <label class="checkbox">
+                            <input type="checkbox" name="tag" value="Center"/>
+                            <span class="default"></span>
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        Magdalena
+                        <label class="checkbox">
+                            <input type="checkbox" name="tag" value="Magdalena" />
+                            <span class="default"></span>
+                        </label>
+                    </li>
+                </ul>
+                <button type="submit" class="btn btn-secondary">Search</button>
+            </form>
+
+        </div>
     </div>
 </div>
+
+<script>
+    $('#greater').click(function (e) {
+        $.ajax({
+            url: "/data/search/{{name}}",
+            type: "GET",
+            dataType: "html",
+            success: function(res) {
+                if (res) {
+                    console.log('AJAX worked!');
+                }
+            }
+        });
+    })
+
+</script>
 

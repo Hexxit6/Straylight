@@ -228,4 +228,41 @@ module.exports = {
             //return res.json(datas);
         });
     },
+
+    greaterThan: function (req,res) {
+        var name = (req.params.name);
+
+        if(['allergens.'+name]) {
+            DataModel.find({['allergens.'+name]: {$gt: req.query.tag}}, {['allergens.' + name]: 1,
+                _id: 0}).populate('fromStation').exec( function (err, datas) {
+                var data = [];
+                data.datas = datas;
+                //return res.json(datas);
+                return res.render('data/greater',{datas: datas, name:name});
+            });
+        }else if(['pollutants.'+name]) {
+            DataModel.find({['pollutants.'+name]: {$gt: req.query.tag}}, {['pollutants.' + name]: 1,
+                _id: 0}).populate('fromStation').exec( function (err, datas) {
+                return res.json(datas);
+            });
+        }
+    },
+    searchStations: function (req,res) {
+        var name = req.params.name;
+
+        DataModel.aggregate([
+            {$lookup: {
+                    from: "stations",
+                    localField: "fromStation",
+                    foreignField: "_id",
+                    as: "stations"
+                }},
+            {$match : {"stations.address": req.query.tag}}
+        ], function (err, datas) {
+            var data =[];
+            data.datas = datas;
+            //return res.json(datas);
+            return res.render('data/search', {datas: datas, name:name})
+        });
+    }
 };

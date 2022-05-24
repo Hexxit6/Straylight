@@ -14,6 +14,8 @@ router.get('/:id', dataController.show);
 router.get('/all/:id', dataController.showAll);
 router.get('/singlePollutant/:id/:name', dataController.getPollutantFromSingleStation);
 router.get('/singlePollutant/:name', dataController.getPollutantFromAllStations);
+router.get('/greater/:name', dataController.greaterThan);
+router.get('/search/:name',dataController.searchStations);
 
 /*
  * POST

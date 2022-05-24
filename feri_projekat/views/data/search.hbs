@@ -1,0 +1,20 @@
+<div class="container-fluid" style="background-color: lightgreen">
+    <div class="row">
+        <div class="col-sm-6 mx-auto" style="background-color: white">
+            <h1 style="text-align: center;font-weight: bold">{{name}}</h1>
+            {{#each datas}}
+                {{#each stations}}
+                <h2 style="text-align: center;font-weight: bold;color: brown">{{address}}</h2>
+                {{/each}}
+                {{#if (lookup allergens ../name)}}
+                    <div style="background-color: lightgreen">
+                        <h3 style="text-align: center;font-weight: bold;">{{lookup allergens ../name}}</h3>
+                    </div>
+                {{/if}}
+                {{#if (lookup pollutants ../name)}}
+                    <h4 style="text-align: center">{{lookup pollutants ../name}}</h4>
+                {{/if}}
+            {{/each}}
+        </div>
+    </div>
+</div>
