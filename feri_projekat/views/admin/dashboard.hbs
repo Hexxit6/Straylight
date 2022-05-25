@@ -1,51 +1,53 @@
-<h1>Administrator dashboard:</h1>
-<br>
+<p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Administrator dashboard:</p>
+<br/>
 
-<div class="row">
+<div class="container">
+    <div class="row align-items-center">
+
+        <div class="col">
+            {{! <div class="card text-center" style="width: 18rem; height: 18rem;"> }}
+            <div class="card text-center" style="background-color: lightgreen">
+                <div class="card-body">
+                    <a href="/admin/users">
+                        <h4 class="card-title" style="color: black;font-weight: bold">Uporabniki</h4>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="mediumblue" class="bi bi-people-fill" viewBox="0 0 16 16">
+                            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                            <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+                            <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+                        </svg>
+                    </a>
+                    <p class="card-text" style="color: black;font-weight: bold">Upravljanje uporabnikov</p>
+                </div>
+            </div>
+        </div>
 
 	<div class="col">
-		{{! <div class="card text-center" style="width: 18rem; height: 18rem;"> }}
-		<div class="card text-center"> 
-			<div class="card-body">
-				<a href="/admin/users">
-					<h5 class="card-title">Uporabniki</h5>
-					<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
-						<path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-						<path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
-						<path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
-					</svg>
-				</a>
-				<p class="card-text">Upravljanje uporabnikov</p>
-			</div>
-		</div>
-	</div>
-
-	<div class="col">
-		<div class="card text-center">
+		<div class="card text-center" style="background-color: lightgreen">
 			<div class="card-body">
 				<a href="/admin/settings">
-					<h5 class="card-title">Scrapper setting</h5>
-					<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="currentColor" class="bi bi-gear-wide" viewBox="0 0 16 16">
+					<h4 class="card-title" style="color: black;font-weight: bold">Scrapper setting</h4>
+					<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="mediumblue" class="bi bi-gear-wide" viewBox="0 0 16 16">
 						<path d="M8.932.727c-.243-.97-1.62-.97-1.864 0l-.071.286a.96.96 0 0 1-1.622.434l-.205-.211c-.695-.719-1.888-.03-1.613.931l.08.284a.96.96 0 0 1-1.186 1.187l-.284-.081c-.96-.275-1.65.918-.931 1.613l.211.205a.96.96 0 0 1-.434 1.622l-.286.071c-.97.243-.97 1.62 0 1.864l.286.071a.96.96 0 0 1 .434 1.622l-.211.205c-.719.695-.03 1.888.931 1.613l.284-.08a.96.96 0 0 1 1.187 1.187l-.081.283c-.275.96.918 1.65 1.613.931l.205-.211a.96.96 0 0 1 1.622.434l.071.286c.243.97 1.62.97 1.864 0l.071-.286a.96.96 0 0 1 1.622-.434l.205.211c.695.719 1.888.03 1.613-.931l-.08-.284a.96.96 0 0 1 1.187-1.187l.283.081c.96.275 1.65-.918.931-1.613l-.211-.205a.96.96 0 0 1 .434-1.622l.286-.071c.97-.243.97-1.62 0-1.864l-.286-.071a.96.96 0 0 1-.434-1.622l.211-.205c.719-.695.03-1.888-.931-1.613l-.284.08a.96.96 0 0 1-1.187-1.186l.081-.284c.275-.96-.918-1.65-1.613-.931l-.205.211a.96.96 0 0 1-1.622-.434L8.932.727zM8 12.997a4.998 4.998 0 1 1 0-9.995 4.998 4.998 0 0 1 0 9.996z"/>
 					</svg>
 				</a>
-				<p class="card-text">Upravljanje nastavitvami (scrapper.py)</p>
+				<p class="card-text" style="color: black;font-weight: bold">Upravljanje nastavitvami (scrapper.py)</p>
 			</div>
 		</div>
 	</div>
 
 	<div class="col">
-		<div class="card text-center">
+		<div class="card text-center" style="background-color: lightgreen">
 			<div class="card-body">
 				<a href="/admin/#">
-					<h5 class="card-title">Interface layout</h5>
-					<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="currentColor" class="bi bi-grid-1x2" viewBox="0 0 16 16">
+					<h4 class="card-title" style="color: black;font-weight: bold">Interface layout</h4>
+					<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="mediumblue" class="bi bi-grid-1x2" viewBox="0 0 16 16">
 						<path d="M6 1H1v14h5V1zm9 0h-5v5h5V1zm0 9v5h-5v-5h5zM0 1a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm9 0a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1V1zm1 8a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1h-5z"/>
 					</svg>
 				</a>
-				<p class="card-text">Upravljanje nastavitvami začetnega uporabniškega vmesnika</p>
+				<p class="card-text" style="color: black;font-weight: bold">Upravljanje nastavitvami začetnega uporabniškega vmesnika</p>
 			</div>
 		</div>
 	</div>
 
+</div>
 </div>

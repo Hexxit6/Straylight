@@ -1,28 +1,47 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<style>
+    .navbar-right {
+        margin-left: auto;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Straylight</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
+           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/stations">Stations</a>
                 </li>
+               <li class="nav-item">
+                   <a class="nav-link active" aria-current="page" href="/admin">Users and admins</a>
+               </li>
             </ul>
             <form class="d-flex">
                 {{#unless userName}}
-                    <a class="btn btn-outline-success" href="/user/login">Prijava</a>
+                   <!-- <a class="btn btn-outline-success" href="/user/login">Prijava</a>
 
                     <a class="ms-2 btn btn-success" href="/user/register">Registracija</a>
+                    -->
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/user/register" class="nav-link active"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                        <li><a href="/user/login" class="nav-link active"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    </ul>
                 {{/unless}}
                 {{#if userName}}
-                    <a class="btn btn-success" href="/user/profile">Hi, {{userName}}</a>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/user/profile" class="nav-link active"><span class="glyphicon glyphicon-user"></span> Hi, {{userName}}</a></li>
+                        <li><a href="/user/logout" class="nav-link active"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    </ul>
+                   <!-- <a class="btn btn-success" href="/user/profile">Hi, {{userName}}</a>
 
                     <a class="ms-2 btn btn-outline-success" href="/user/logout">Logout</a>
+                    -->
                 {{/if}}
             </form>
         </div>
