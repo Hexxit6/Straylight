@@ -45,10 +45,11 @@ module.exports = {
      * stationController.show()
      */
     show: function (req, res) {
-        var id = req.params.id;
-        req.session.stationID = id;
+        //var id = req.params.id;
+        var address = req.params.address;
+        //req.session.stationID = id;
 
-        StationModel.findOne({_id: id}, function (err, station) {
+        StationModel.findOne({address: address}, function (err, station) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting station.',
@@ -61,7 +62,7 @@ module.exports = {
                     message: 'No such station'
                 });
             }
-            DataModel.find({fromStation: id},function (err, datas) {
+            DataModel.find({fromStation: address},function (err, datas) {
                 if (err) {
                     return res.status(500).json({
                         message: 'Error when getting data.',

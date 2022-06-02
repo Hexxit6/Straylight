@@ -42,7 +42,7 @@
                         <h1 style="font-weight: bold;color: white;text-align: center;padding: 60px 0;font-size: 60px">{{lookup data.pollutants name}}</h1>
                     {{/if}}
             </div>
-            <form method="get" action="/data/singlePollutant/{{name}}">
+            <form method="get" action="/data/fromAllStations/{{name}}">
                 <button type="submit" class="btn btn-secondary btn-lg btn-block">Get data from all stations</button>
             </form>
             {{#if (lookup data.allergens name)}}

@@ -10,7 +10,7 @@ router.get('/stations', stationController.stations);
 /*
  * GET
  */
-router.get('/:id', stationController.show);
+router.get('/:address', stationController.show);
 
 
 /*

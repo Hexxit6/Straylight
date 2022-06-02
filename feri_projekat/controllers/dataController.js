@@ -91,7 +91,7 @@ module.exports = {
                     Mugwort : req.body.allergens.Mugwort,
                     OliveTree : req.body.allergens.OliveTree,
                 },
-            fromStation : req.session.stationID
+            fromStation : req.body.fromStation
         });
 
 
@@ -189,16 +189,19 @@ module.exports = {
     */
 
     getPollutantFromSingleStation: function (req, res) {
-        var id = req.params.id;
+        var address = req.params.address;
         var name = req.params.name;
 
-            DataModel.findOne({fromStation: id}, {["pollutants." + name] : 1,["allergens." + name]:1, _id:0},function (err, data) {
+            DataModel.findOne({fromStation: address}, {["pollutants." + name] : 1,["allergens." + name]:1, _id:0},function (err, data) {
 
                 //return res.json(data);
                 return res.render('data/allergens_and_pollutants', {
                     data: data,
-                    name: name
+                    name: name,
+                    address: address
                 });
+
+
 
                 });
     },
@@ -219,14 +222,17 @@ module.exports = {
         DataModel.find({$or: [{['allergens.'+name]: null}, {['pollutants.'+name]: null}]}, {
             ['allergens.' + name]: 1,
             ['pollutants.' + name]: 1,
+            fromStation: 1,
             _id: 0
-        }).populate('fromStation').exec(function (err, datas) {
+        },function (err, datas) {
             var data = [];
             data.datas = datas;
+
 
             return res.render('data/from_all_stations', {datas: datas, name:name});
             //return res.json(datas);
         });
+
     },
 
     greaterThan: function (req,res) {
