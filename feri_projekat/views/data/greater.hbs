@@ -3,7 +3,7 @@
         <div class="col-sm-6 mx-auto" style="background-color: white">
             <h1 style="text-align: center;font-weight: bold">{{name}}</h1>
             {{#each datas}}
-                <h2 style="text-align: center;font-weight: bold;color: brown">{{fromStation.address}}</h2>
+                <h2 style="text-align: center;font-weight: bold;color: brown">{{fromStation}}</h2>
                 {{#if (lookup allergens ../name)}}
                     <div style="background-color: lightgreen">
                         <h3 style="text-align: center;font-weight: bold;">{{lookup allergens ../name}}</h3>
