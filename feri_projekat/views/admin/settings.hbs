@@ -17,22 +17,22 @@
 <div>
 	<div class="form-check form-check-inline">
 		<label for="seconds" class="form-check-label">Seconds</label>
-		<input type="radio" name="seconds" class="form-check-input" value="seconds" />
+		<input type="radio" name="unit" class="form-check-input" value="seconds" />
 	</div>
 
 	<div class="form-check form-check-inline">
 		<label for="minutes" class="form-check-label">Minutes</label>
-		<input type="radio" name="minutes" class="form-check-input" value="minutes" />
+		<input type="radio" name="unit" class="form-check-input" value="minutes" />
 	</div>
 
 	<div class="form-check form-check-inline">
 		<label for="hours" class="form-check-label">Hours</label>
-		<input type="radio" name="hours" class="form-check-input" value="hours" />
+		<input type="radio" name="unit" class="form-check-input" value="hours" />
 	</div>
 
 	<div class="form-check form-check-inline">
 		<label for="days" class="form-check-label">Days</label>
-		<input type="radio" name="days" class="form-check-input" value="days" />
+		<input type="radio" name="unit" class="form-check-input" value="days" />
 	</div>
 
 	<button name="unitBtn" class="btn btn-dark" style="margin-bottom: 7px">Set units</button>
@@ -40,7 +40,7 @@
 <br>
 
 <div class="input-group mb-3">
-	<input type="text" name="interval" class="form-control" /><br/>
+	<input type="text" name="token" class="form-control" /><br/>
 	<button name="tokenBtn" class="btn btn-dark" style="margin-top: 7px">Set token</button>
 </div>
 <br>
@@ -56,7 +56,10 @@ $(function(){
 	$("[name='start']").click(async function(){
 		const url = window.location.origin + "/settings/start";
 		const response = await fetch(url, {
-			method: "POST"
+			method: "POST",
+			headers: {
+				credentials: 'include',
+			}
 		});
 		const data = await response.json();
 	});
@@ -64,7 +67,10 @@ $(function(){
 	$("[name='stop']").click(async function(){
 		const url = window.location.origin + "/settings/stop";
 		const response = await fetch(url, {
-			method: "POST"
+			method: "POST",
+			headers: {
+				credentials: 'include',
+			}
 		});
 		const data = await response.json();
 	});
@@ -78,6 +84,9 @@ $(function(){
 
 		const res = await fetch(url, {
 			method: 'POST',
+			headers: {
+				credentials: 'include',
+			},
 			body: formData
 		});
 		const data = await res.json();
@@ -86,6 +95,60 @@ $(function(){
 		} else {
 			$('#error').val("Failed to upload!");
 		}
+	});
+
+	$("[name='intervalBtn']").click(async function(){
+		const url = window.location.origin + "/settings/interval";
+		
+		var interval = $("[name='interval']").val();
+
+		const response = await fetch(url, {
+			method: "POST",
+			headers: {
+				credentials: 'include',
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				interval: interval
+			}) 
+		});
+		const data = await response.json();
+	});
+
+	$("[name='unitBtn']").click(async function(){
+		const url = window.location.origin + "/settings/unit";
+		
+		var unit = $("input[name=unit]:checked").val();
+
+		const response = await fetch(url, {
+			method: "POST",
+			headers: {
+				credentials: 'include',
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				unit: unit
+			}) 
+		});
+		const data = await response.json();
+	});
+
+	$("[name='tokenBtn']").click(async function(){
+		const url = window.location.origin + "/settings/token";
+		
+		var token = $("[name='token']").val();
+
+		const response = await fetch(url, {
+			method: "POST",
+			headers: {
+				credentials: 'include',
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				token: token
+			}) 
+		});
+		const data = await response.json();
 	});
 
 });

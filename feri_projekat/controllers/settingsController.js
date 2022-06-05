@@ -1,4 +1,6 @@
 var SettingsModel = require('../models/settingsModel.js');
+const { spawn } = require('node:child_process');
+
 
 /**
  * settingsController.js
@@ -16,21 +18,15 @@ module.exports = {
                 });
             }
 
+			const ps = spawn('python3', [`${__dirname}/../principi/scrapper.py`, '-s', `${__dirname}/../principi/stations_active.txt`, '-i', settings.interval, '-u', settings.unit, '-t', settings.token])
+
             return res.json(settings);
         });
     },
 
     stop: function (req, res) {
-        SettingsModel.find(function (err, settings) {
-            if (err) {
-                return res.status(500).json({
-                    message: 'Error when getting settings.',
-                    error: err
-                });
-            }
-
-            return res.json(settings);
-        });
+		const ps = spawn('killall', ['python3'])
+		return res.status(200);
     },
 
 	upload: function (req, res) {

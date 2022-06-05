@@ -5,13 +5,13 @@ var commentController = require('../controllers/commentController.js');
 /*
  * GET
  */
-router.get('/', commentController.list);
+router.get('/:id_station', commentController.list);
 
 
 /*
  * GET
  */
-router.get('/:id', commentController.show);
+router.get('/:id_station/:id', commentController.show);
 
 /*
  * POST

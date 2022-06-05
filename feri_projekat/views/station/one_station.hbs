@@ -71,13 +71,18 @@
         left: 0;
     }
 
+    .datas form button {
+        width: 300px;
+        margin-bottom: 15px;
+    }
+
 </style>
 
 
-{{#each data}}
-    <h1 style="font-weight: bold;text-align: center">{{../station.address}}</h1>
+
+    <h1 class="mt-5" style="font-weight: bold;text-align: center">{{station.address}}</h1>
     <h2 style="color: #0275d8;text-align: center">AQI</h2>
-    <div class="progress mx-auto" data-value='{{pollutants.AQI}}'>
+    <div class="progress mx-auto" data-value='{{station.datas.pollutants.AQI}}'>
           <span class="progress-left">
                         <span class="progress-bar border-primary"></span>
           </span>
@@ -85,48 +90,54 @@
                         <span class="progress-bar border-primary"></span>
           </span>
         <div class="progress-value w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
-            <div class="h2 font-weight-bold">{{pollutants.AQI}}</div>
+            <div class="h2 font-weight-bold">{{station.datas.pollutants.AQI}}</div>
         </div>
     </div>
     <div class="container">
-        <div class="row">
-            <div class="col-sm-6 mx-auto">
+        <div class="row datas">
+            <div class="col-12 col-md-4 offset-md-2 text-center">
                 <h3 style="font-style: italic;text-align: center ">Alergens: </h3>
-                <form method="get" action="/data/singlePollutant/{{fromStation}}/Birch">
-                    <button type="submit" class="btn btn-secondary btn-lg btn-block">Birch: {{allergens.Birch}}</button><br/>
+                <form method="get" action="/data/singlePollutant/{{station.datas.fromStation}}/Birch">
+                    <button type="submit" class="btn btn-secondary btn-lg btn-block">Birch: {{station.datas.allergens.Birch}}</button><br/>
                 </form>
-                <form method="get" action="/data/singlePollutant/{{fromStation}}/Alder">
-                    <button type="submit" class="btn btn-secondary btn-lg btn-block">Alder: {{allergens.Alder}}</button><br/>
+                <form method="get" action="/data/singlePollutant/{{station.datas.fromStation}}/Alder">
+                    <button type="submit" class="btn btn-secondary btn-lg btn-block">Alder: {{station.datas.allergens.Alder}}</button><br/>
                 </form>
-                <form method="get" action="/data/singlePollutant/{{fromStation}}/Mugwort">
-                    <button type="submit" class="btn btn-secondary btn-lg btn-block">Mugwort: </button><br/>
+                <form method="get" action="/data/singlePollutant/{{station.datas.fromStation}}/Mugwort">
+                    <button type="submit" class="btn btn-secondary btn-lg btn-block">Mugwort: {{station.datas.allergens.Birch}}</button><br/>
                 </form>
-                <form method="get" action="/data/singlePollutant/{{fromStation}}/Grasses">
-                    <button type="submit" class="btn btn-secondary btn-lg btn-block">Grasses: </button><br/>
+                <form method="get" action="/data/singlePollutant/{{station.datas.fromStation}}/Grasses">
+                    <button type="submit" class="btn btn-secondary btn-lg btn-block">Grasses: {{station.datas.allergens.Alder}}</button><br/>
                 </form>
-                <form method="get" action="/data/singlePollutant/{{fromStation}}/Ragweed">
-                    <button type="submit" class="btn btn-secondary btn-lg btn-block">Ragweed: </button><br/>
+                <form method="get" action="/data/singlePollutant/{{station.datas.fromStation}}/Ragweed">
+                    <button type="submit" class="btn btn-secondary btn-lg btn-block">Ragweed: {{station.datas.allergens.Mugwort}}</button><br/>
                 </form>
-                <form method="get" action="/data/singlePollutant/{{fromStation}}/OliveTree">
-                    <button type="submit" class="btn btn-secondary btn-lg btn-block">OliveTree: </button><br/>
+                <form method="get" action="/data/singlePollutant/{{station.datas.fromStation}}/OliveTree">
+                    <button type="submit" class="btn btn-secondary btn-lg btn-block">OliveTree: {{station.datas.allergens.Grasses}}</button><br/>
                 </form>
             </div>
-            <div class="col-sm-6 mx-auto">
+            <div class="col-12 col-md-4  text-center">
                 <h3 style="font-style: italic; text-align: center">Pollutants: </h3>
-                <form method="get" action="/data/singlePollutant/{{fromStation}}/PM2_5">
-                    <button type="submit" class="btn btn-secondary btn-lg btn-block">PM2.5: </button><br/>
+                <form method="get" action="/data/singlePollutant/{{station.datas.fromStation}}/PM2_5">
+                    <button type="submit" class="btn btn-secondary btn-lg btn-block">PM2.5: {{station.datas.pollutants.PM2_5}}</button><br/>
                 </form>
-                <form method="get" action="/data/singlePollutant/{{fromStation}}/PM10">
-                    <button type="submit" class="btn btn-secondary btn-lg btn-block">PM10: </button><br/>
+                <form method="get" action="/data/singlePollutant/{{station.datas.fromStation}}/PM10">
+                    <button type="submit" class="btn btn-secondary btn-lg btn-block">PM10: {{station.datas.pollutants.PM10}}</button><br/>
                 </form>
-                <form method="get" action="/data/singlePollutant/{{fromStation}}/NO2">
-                    <button type="submit" class="btn btn-secondary btn-lg btn-block">NO2: </button><br/>
+                <form method="get" action="/data/singlePollutant/{{station.datas.fromStation}}/NO2">
+                    <button type="submit" class="btn btn-secondary btn-lg btn-block">NO2: {{station.datas.pollutants.NO2}}</button><br/>
                 </form>
             </div>
         </div>
     </div>
 
-{{/each}}
+
+
+{{> barplot}}
+
+{{> comments}}
+
+
 <script>
     $(function() {
 

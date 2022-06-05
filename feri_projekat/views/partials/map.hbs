@@ -1,26 +1,29 @@
 <div class="row">
-    <div class="col-12 my-3">
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                AQI (US)
-            </button>
-            <ul class="dropdown-menu">
-                <li class="dropdown-item" onclick="changeDropdown('AQI')" value="aqi">AQI (US)</li>
-                <li class="dropdown-item" onclick="changeDropdown('PM2_5')" value="pm25">PM2.5</li>
-                <li class="dropdown-item" onclick="changeDropdown('PM10')" value="pm10">PM10</li>
-                <li class="dropdown-item" onclick="changeDropdown('NO2')" value="no2">NO2</li>
-                <li class="dropdown-item" onclick="changeDropdown('Grasses')" value="poac">Grasses</li>
-                <li class="dropdown-item" onclick="changeDropdown('Birch')" value="betu">Birch</li>
-                <li class="dropdown-item" onclick="changeDropdown('Alder')" value="alnu">Alder</li>
-                <li class="dropdown-item" onclick="changeDropdown('Ragweed')" value="ambr">Ragweed</li>
-                <li class="dropdown-item" onclick="changeDropdown('Mugwort')" value="arte">Mugwort</li>
-                <li class="dropdown-item" onclick="changeDropdown('OliveTree')" value="olea">Olive Tree</li>
-            </ul>
+    <div class="col-12 g-0 position-relative">
+        <div id="map" style="width: 100%; height: 680px"></div>
+
+        <div class="position-absolute top-0 end-0" style="z-index: 9999">
+            <div class="dropdown mt-2 me-2">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    AQI (US)
+                </button>
+                <ul class="dropdown-menu">
+                    <li class="dropdown-item" onclick="changeDropdown('AQI')" value="aqi">AQI (US)</li>
+                    <li class="dropdown-item" onclick="changeDropdown('PM2_5')" value="pm25">PM2.5</li>
+                    <li class="dropdown-item" onclick="changeDropdown('PM10')" value="pm10">PM10</li>
+                    <li class="dropdown-item" onclick="changeDropdown('NO2')" value="no2">NO2</li>
+                    <li class="dropdown-item" onclick="changeDropdown('Grasses')" value="poac">Grasses</li>
+                    <li class="dropdown-item" onclick="changeDropdown('Birch')" value="betu">Birch</li>
+                    <li class="dropdown-item" onclick="changeDropdown('Alder')" value="alnu">Alder</li>
+                    <li class="dropdown-item" onclick="changeDropdown('Ragweed')" value="ambr">Ragweed</li>
+                    <li class="dropdown-item" onclick="changeDropdown('Mugwort')" value="arte">Mugwort</li>
+                    <li class="dropdown-item" onclick="changeDropdown('OliveTree')" value="olea">Olive Tree</li>
+                </ul>
+            </div>
         </div>
     </div>
-    <div class="col-12">
-        <div id="map" style="width: 100%; height: 500px"></div>
-    </div>
+
+
 </div>
 <script>
 
@@ -29,7 +32,6 @@
         $('#dropdownMenuButton1').text(item);
         refresh_marker(item);
     }
-
 
     var map = L.map('map').setView([46.5576439, 15.6455854], 13);
 
@@ -54,7 +56,7 @@
                     $.ajax({
                         async: false,
                         method: "GET",
-                        url: "/data/" + el._id,
+                        url: "/data/" + el.address,
                         success: function(data2) {
                             el.data = data2;
                         }
@@ -81,7 +83,7 @@
         data_station.forEach(el => {
             if("data" in el) {
                 var key_1 = "pollutants";
-                if( key in  el.data[key_1][0]) {
+                if( key in  el.data[key_1]) {
                     key_1 = "pollutants";
                 } else {
                     key_1 = "allergens";
@@ -91,7 +93,7 @@
                 new L.Marker(cord, {
                     icon: new L.DivIcon({
                         className: 'my-div-icon',
-                        html: '<h6><span class="badge bg-secondary" onclick=\'onStationMapClick("' + el._id+'")\'>' + el.data[key_1][0][key] + '</span><h4>'
+                        html: '<h6><span class="badge bg-secondary" onclick=\'window.location.href = "/stations/' + el.address + '";\'>' + el.data[key_1][key] + '</span><h4>'
                     })
                 }).addTo(markerGroup);
             }

@@ -24,7 +24,7 @@ module.exports = {
                 });
             }
 
-			var token = jwt.sign({id: user._id, username: user.username}, process.env.TOKEN_SECRET);
+			var token = jwt.sign({id: user._id, username: user.username, admin: user.admin}, process.env.TOKEN_SECRET);
 			return res.json({token: token});
 		});
 	},

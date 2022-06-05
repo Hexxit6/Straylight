@@ -62,18 +62,17 @@ module.exports = {
                     message: 'No such station'
                 });
             }
-            DataModel.find({fromStation: address},function (err, datas) {
+            DataModel.findOne({fromStation: address}).sort({"date": -1}).exec(function (err, datas) {
                 if (err) {
                     return res.status(500).json({
                         message: 'Error when getting data.',
                         error: err
                     });
                 }
-                var data = []
-                data.datas = datas;
+                station.datas = datas;
 
                 //return res.json({station: station, data: datas});
-                return res.render('station/one_station', {station: station, data: datas});
+                return res.render('station/one_station', {station: station});
             })});
     },
 
