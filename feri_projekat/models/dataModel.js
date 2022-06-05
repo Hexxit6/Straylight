@@ -3,18 +3,18 @@ var Schema   = mongoose.Schema;
 
 var dataSchema = new Schema({
 	'pollutants' : {
-		'AQI' : String,
-		'PM2_5' : String,
-		'PM10' : String,
-		'NO2' : String
+		'AQI' : Number,
+		'PM2_5' : Number,
+		'PM10' : Number,
+		'NO2' : Number
 	},
 	'allergens' : {
-		'Birch' : String,
-		'Alder' : String,
-		'Grasses' : String,
-		'Ragweed' : String,
-		'Mugwort' : String,
-		'OliveTree' : String
+		'Birch' : Number,
+		'Alder' : Number,
+		'Grasses' : Number,
+		'Ragweed' : Number,
+		'Mugwort' : Number,
+		'OliveTree' : Number
 	},
 	'date' : Date,
 	'fromStation' : {
