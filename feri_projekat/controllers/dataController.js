@@ -240,7 +240,8 @@ module.exports = {
 
         if(['allergens.'+name]) {
             DataModel.find({['allergens.'+name]: {$gt: req.query.tag}}, {['allergens.' + name]: 1,
-                _id: 0}).populate('fromStation').exec( function (err, datas) {
+                fromStation:1,
+                _id: 0}, function (err, datas) {
                 var data = [];
                 data.datas = datas;
                 //return res.json(datas);
@@ -248,8 +249,10 @@ module.exports = {
             });
         }else if(['pollutants.'+name]) {
             DataModel.find({['pollutants.'+name]: {$gt: req.query.tag}}, {['pollutants.' + name]: 1,
-                _id: 0}).populate('fromStation').exec( function (err, datas) {
-                return res.json(datas);
+                fromStation:1,
+                _id: 0},function (err, datas) {
+                //return res.json(datas);
+                return res.render('data/greater',{datas: datas, name:name});
             });
         }
     },
@@ -260,7 +263,7 @@ module.exports = {
             {$lookup: {
                     from: "stations",
                     localField: "fromStation",
-                    foreignField: "_id",
+                    foreignField: "address",
                     as: "stations"
                 }},
             {$match : {"stations.address": req.query.tag}}
