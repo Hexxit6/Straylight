@@ -28,9 +28,9 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-5 mx-auto" style="background-color: white">
-            <div style="border: 6px solid lightgreen;border-radius: 25px">
-                <h2 style="font-weight: bold;text-align: center">{{name}}
-                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modal"><span class="glyphicon glyphicon-info-sign"></span>
+            <div class="my-2" style="border: 6px solid lightgreen;border-radius: 25px">
+                <h2 class="my-2" style="font-weight: bold;text-align: center">{{name}}
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal"><span class="fa fa-info-circle"></span>
 
                     </button>
                 </h2>
@@ -42,15 +42,15 @@
                         <h1 style="font-weight: bold;color: white;text-align: center;padding: 60px 0;font-size: 60px">{{lookup data.pollutants name}}</h1>
                     {{/if}}
             </div>
-            <form method="get" action="/data/fromAllStations/{{name}}">
-                <button type="submit" class="btn btn-secondary btn-lg btn-block">Get data from all stations</button>
+            <form class="my-2" method="get" action="/data/fromAllStations/{{name}}">
+                <button type="submit" class="btn btn-secondary btn-lg btn-block w-100">Get data from all stations</button>
             </form>
             {{#if (lookup data.allergens name)}}
-                <div class="animated-progress progress">
+                <div class="animated-progress progress w-100">
                     <span data-progress="{{lookup data.allergens name}}"></span>
                 </div>
             {{else}}
-                <div class="animated-progress progress">
+                <div class="animated-progress progress w-100">
                     <span data-progress="{{lookup data.pollutants name}}"></span>
                 </div>
             {{/if}}
@@ -139,7 +139,7 @@
                 {{/ifEquals}}
             </div>
             <div class="modal-footer" style="background-color: lightgreen">
-                <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

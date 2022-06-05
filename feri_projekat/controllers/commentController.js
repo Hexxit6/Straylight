@@ -12,7 +12,9 @@ module.exports = {
      * commentController.list()
      */
     list: function (req, res) {
-        CommentModel.find(function (err, comments) {
+        var id_station = req.params.id_station;
+
+        CommentModel.find({id_station: id_station},function (err, comments) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting comment.',
@@ -29,8 +31,9 @@ module.exports = {
      */
     show: function (req, res) {
         var id = req.params.id;
+        var id_station = req.params.id_station;
 
-        CommentModel.findOne({_id: id}, function (err, comment) {
+        CommentModel.findOne({_id: id, id_station: id_station}, function (err, comment) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting comment.',
@@ -55,6 +58,7 @@ module.exports = {
         let name = req.body.name;
         let email = null;
         let id_user = null;
+        let id_station = req.body.id_station;
 
 
         UserModel.findById(req.session.userId)
@@ -75,7 +79,8 @@ module.exports = {
                     datetime: Date.now(),
                     name: name,
                     email: email,
-                    id_user: id_user
+                    id_user: id_user,
+                    id_station: id_station
                 });
 
                 comment.save(function (err, comment) {

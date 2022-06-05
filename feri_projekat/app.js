@@ -53,6 +53,15 @@ app.use(session({
 	store: MongoStore.create({mongoUrl: mongoDB})
 }));
 
+app.use(function (req, res, next) {
+    // Make `user` and `authenticated` available in templates
+    res.locals.userId = req.session.userId;
+    res.locals.username = req.session.userName;
+
+    console.log(res.locals);
+    next()
+})
+
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/stations', stationRouter);
