@@ -192,7 +192,8 @@ module.exports = {
         var address = req.params.address;
         var name = req.params.name;
 
-            DataModel.findOne({fromStation: address}, {["pollutants." + name] : 1,["allergens." + name]:1, _id:0},function (err, data) {
+            DataModel.findOne({fromStation: address}, {["pollutants." + name] : 1,["allergens." + name]:1, _id:0})
+                .sort({"date": -1}).exec(function (err, data) {
 
                 //return res.json(data);
                 return res.render('data/allergens_and_pollutants', {
@@ -200,9 +201,6 @@ module.exports = {
                     name: name,
                     address: address
                 });
-
-
-
                 });
     },
    /* getPollutantFromAllStations: function (req, res) {
