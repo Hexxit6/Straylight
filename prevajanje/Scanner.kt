@@ -1,3 +1,6 @@
+import java.io.ByteArrayInputStream
+import kotlin.math.*
+
 import java.io.File
 import java.io.InputStream
 import java.util.LinkedList
@@ -71,10 +74,10 @@ interface Automaton {
 }
 
 object Example : Automaton {
-    override val states = (1..139).toSet()
+    override val states = (1..142).toSet()
     override val alphabet = 0 .. 255
     override val startState = 1
-	override val finalStates = setOf(2,3,5,8,15,19,22,24,28,30,33,35,39,44,47,50,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,78,83,88,94,98,100,106,110,116,120,125,130,134,135,136,139)
+    override val finalStates = setOf(2,3,5,8,15,19,22,24,28,30,33,35,39,44,47,50,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,78,83,88,94,98,100,106,110,116,120,125,130,134,135,136,139,142)
 
     private val numberOfStates = states.maxOrNull()!! + 1
     private val numberOfSymbols = alphabet.maxOrNull()!! + 1
@@ -103,107 +106,107 @@ object Example : Automaton {
     }
 
     init {
-		// escapes
+        // escapes
         setTransition(1, ' ', 136)
         setTransition(1, '\n', 136)
         setTransition(1, '\t', 136)
 
-		// id
+        // id
         for (i in 'a'..'z') setTransition(2, i, 2)
         for (i in 'A'..'Z') setTransition(2, i, 2)
         for (i in '0'..'9') setTransition(2, i, 2)
-		setTransition(2, '_', 2)
+        setTransition(2, '_', 2)
 
-		// float
+        // float
         for (i in '0'..'9') setTransition(1, i, 3)
         for (i in '0'..'9') setTransition(3, i, 3)
         setTransition(3, '.', 4)
         for (i in '0'..'9') setTransition(4, i, 5)
         for (i in '0'..'9') setTransition(5, i, 5)
 
-		// unit
-		setTransition(1, 'n', 6)
-		setTransition(6, 'i', 7)
-		setTransition(7, 'l', 8)
+        // unit
+        setTransition(1, 'n', 6)
+        setTransition(6, 'i', 7)
+        setTransition(7, 'l', 8)
         for (i in 'a'..'h') setTransition(6, i, 2)
         for (i in 'j'..'z') setTransition(6, i, 2)
         for (i in 'a'..'k') setTransition(7, i, 2)
         for (i in 'm'..'z') setTransition(7, i, 2)
 
-		// hex
-		setTransition(1, '#', 9)
-		for (j in 9..14) {
-			for (i in 'a'..'f') setTransition(j, i, j+1)
-			for (i in 'A'..'F') setTransition(j, i, j+1)
-			for (i in '0'..'9') setTransition(j, i, j+1)
-		}
+        // hex
+        setTransition(1, '#', 9)
+        for (j in 9..14) {
+            for (i in 'a'..'f') setTransition(j, i, j+1)
+            for (i in 'A'..'F') setTransition(j, i, j+1)
+            for (i in '0'..'9') setTransition(j, i, j+1)
+        }
 
-		// city
-		setTransition(1, 'c', 16)
-		setTransition(16, 'i', 17)
-		setTransition(17, 't', 18)
-		setTransition(18, 'y', 19)
+        // city
+        setTransition(1, 'c', 16)
+        setTransition(16, 'i', 17)
+        setTransition(17, 't', 18)
+        setTransition(18, 'y', 19)
         for (i in 'a'..'h') setTransition(16, i, 2)
         for (i in 'j'..'z') setTransition(16, i, 2)
         for (i in 'a'..'s') setTransition(17, i, 2)
         for (i in 'u'..'z') setTransition(17, i, 2)
         for (i in 'a'..'x') setTransition(18, i, 2)
-        					setTransition(18, 'z', 2)
+        setTransition(18, 'z', 2)
 
-		// var
-		setTransition(1, 'l', 20)
-		setTransition(20, 'e', 21)
-		setTransition(21, 't', 22)
+        // var
+        setTransition(1, 'l', 20)
+        setTransition(20, 'e', 21)
+        setTransition(21, 't', 22)
         for (i in 'a'..'d') setTransition(20, i, 2)
         for (i in 'f'..'z') setTransition(20, i, 2)
         for (i in 'a'..'s') setTransition(21, i, 2)
         for (i in 'u'..'z') setTransition(21, i, 2)
 
-		// if
-		setTransition(1, 'i', 23)
-		setTransition(23, 'f', 24)
+        // if
+        setTransition(1, 'i', 23)
+        setTransition(23, 'f', 24)
         for (i in 'a'..'e') setTransition(23, i, 2)
         for (i in 'g'..'z') setTransition(23, i, 2)
 
-		// elif, else
-		setTransition(1, 'e', 25)
-		setTransition(25, 'l', 26)
+        // elif, else
+        setTransition(1, 'e', 25)
+        setTransition(25, 'l', 26)
         for (i in 'a'..'k') setTransition(25, i, 2)
         for (i in 'm'..'z') setTransition(25, i, 2)
-		
-		setTransition(26, 'i', 27)
-		setTransition(27, 'f', 28)
+
+        setTransition(26, 'i', 27)
+        setTransition(27, 'f', 28)
         for (i in 'a'..'h') setTransition(26, i, 2)
         for (i in 'j'..'r') setTransition(26, i, 2)
         for (i in 't'..'z') setTransition(26, i, 2)
         for (i in 'a'..'e') setTransition(27, i, 2)
         for (i in 'g'..'z') setTransition(27, i, 2)
 
-		setTransition(26, 's', 29)
-		setTransition(29, 'e', 30)
+        setTransition(26, 's', 29)
+        setTransition(29, 'e', 30)
         for (i in 'a'..'d') setTransition(29, i, 2)
         for (i in 'f'..'z') setTransition(29, i, 2)
 
-		// and
-		setTransition(1, 'a', 31)
-		setTransition(31, 'n', 32)
-		setTransition(32, 'd', 33)
+        // and
+        setTransition(1, 'a', 31)
+        setTransition(31, 'n', 32)
+        setTransition(32, 'd', 33)
         for (i in 'a'..'m') setTransition(31, i, 2)
         for (i in 'o'..'z') setTransition(31, i, 2)
         for (i in 'a'..'c') setTransition(32, i, 2)
         for (i in 'e'..'z') setTransition(32, i, 2)
 
-		// or
-		setTransition(1, 'o', 34)
-		setTransition(34, 'r', 35)
+        // or
+        setTransition(1, 'o', 34)
+        setTransition(34, 'r', 35)
         for (i in 'a'..'q') setTransition(34, i, 2)
         for (i in 's'..'z') setTransition(34, i, 2)
 
-		// true
-		setTransition(1, 't', 36)
-		setTransition(36, 'r', 37)
-		setTransition(37, 'u', 38)
-		setTransition(38, 'e', 39)
+        // true
+        setTransition(1, 't', 36)
+        setTransition(36, 'r', 37)
+        setTransition(37, 'u', 38)
+        setTransition(38, 'e', 39)
         for (i in 'a'..'q') setTransition(36, i, 2)
         for (i in 's'..'z') setTransition(36, i, 2)
         for (i in 'a'..'t') setTransition(37, i, 2)
@@ -211,12 +214,12 @@ object Example : Automaton {
         for (i in 'a'..'d') setTransition(38, i, 2)
         for (i in 'f'..'z') setTransition(38, i, 2)
 
-		// break
-		setTransition(1, 'b', 40)
-		setTransition(40, 'r', 41)
-		setTransition(41, 'e', 42)
-		setTransition(42, 'a', 43)
-		setTransition(43, 'k', 44)
+        // break
+        setTransition(1, 'b', 40)
+        setTransition(40, 'r', 41)
+        setTransition(41, 'e', 42)
+        setTransition(42, 'a', 43)
+        setTransition(43, 'k', 44)
         for (i in 'a'..'q') setTransition(40, i, 2)
         for (i in 's'..'z') setTransition(40, i, 2)
         for (i in 'a'..'d') setTransition(41, i, 2)
@@ -225,28 +228,28 @@ object Example : Automaton {
         for (i in 'a'..'j') setTransition(43, i, 2)
         for (i in 'l'..'z') setTransition(43, i, 2)
 
-		// for, func, false
-		setTransition(1, 'f', 45)
-		setTransition(45, 'o', 46)
-		setTransition(46, 'r', 47)
+        // for, func, false
+        setTransition(1, 'f', 45)
+        setTransition(45, 'o', 46)
+        setTransition(46, 'r', 47)
         for (i in 'b'..'n') setTransition(45, i, 2)
         for (i in 'p'..'t') setTransition(45, i, 2)
         for (i in 'v'..'z') setTransition(45, i, 2)
         for (i in 'a'..'q') setTransition(46, i, 2)
         for (i in 's'..'z') setTransition(46, i, 2)
 
-		setTransition(45, 'u', 48)
-		setTransition(48, 'n', 49)
-		setTransition(49, 'c', 50)
+        setTransition(45, 'u', 48)
+        setTransition(48, 'n', 49)
+        setTransition(49, 'c', 50)
         for (i in 'a'..'m') setTransition(48, i, 2)
         for (i in 'o'..'z') setTransition(48, i, 2)
         for (i in 'a'..'b') setTransition(49, i, 2)
         for (i in 'd'..'z') setTransition(49, i, 2)
 
-		setTransition(45, 'a', 51)
-		setTransition(51, 'l', 52)
-		setTransition(52, 's', 53)
-		setTransition(53, 'e', 54)
+        setTransition(45, 'a', 51)
+        setTransition(51, 'l', 52)
+        setTransition(52, 's', 53)
+        setTransition(53, 'e', 54)
         for (i in 'a'..'k') setTransition(51, i, 2)
         for (i in 'm'..'z') setTransition(51, i, 2)
         for (i in 'a'..'r') setTransition(52, i, 2)
@@ -254,33 +257,33 @@ object Example : Automaton {
         for (i in 'a'..'d') setTransition(53, i, 2)
         for (i in 'f'..'z') setTransition(53, i, 2)
 
-		// symbols
-		setTransition(1, '=', 55)
-		setTransition(55, '=', 56)
-		setTransition(1, ';', 57)
-		setTransition(1, '+', 58)
-		setTransition(1, '-', 59)
-		setTransition(1, '*', 60)
-		setTransition(1, '/', 61)
-		setTransition(1, '(', 62)
-		setTransition(1, ')', 63)
-		setTransition(1, '[', 64)
-		setTransition(1, ']', 65)
-		setTransition(1, '{', 66)
-		setTransition(1, '}', 67)
-		setTransition(1, ',', 68)
-		setTransition(1, '!', 69)
-		setTransition(69, '=', 70)
-		setTransition(1, '>', 71)
-		setTransition(71, '=', 72)
-		setTransition(1, '<', 73)
-		setTransition(73, '=', 74)
+        // symbols
+        setTransition(1, '=', 55)
+        setTransition(55, '=', 56)
+        setTransition(1, ';', 57)
+        setTransition(1, '+', 58)
+        setTransition(1, '-', 59)
+        setTransition(1, '*', 60)
+        setTransition(1, '/', 61)
+        setTransition(1, '(', 62)
+        setTransition(1, ')', 63)
+        setTransition(1, '[', 64)
+        setTransition(1, ']', 65)
+        setTransition(1, '{', 66)
+        setTransition(1, '}', 67)
+        setTransition(1, ',', 68)
+        setTransition(1, '!', 69)
+        setTransition(69, '=', 70)
+        setTransition(1, '>', 71)
+        setTransition(71, '=', 72)
+        setTransition(1, '<', 73)
+        setTransition(73, '=', 74)
 
-		// Line
-		setTransition(1, 'L', 75)
-		setTransition(75, 'i', 76)
-		setTransition(76, 'n', 77)
-		setTransition(77, 'e', 78)
+        // Line
+        setTransition(1, 'L', 75)
+        setTransition(75, 'i', 76)
+        setTransition(76, 'n', 77)
+        setTransition(77, 'e', 78)
         for (i in 'a'..'h') setTransition(75, i, 2)
         for (i in 'j'..'z') setTransition(75, i, 2)
         for (i in 'a'..'m') setTransition(76, i, 2)
@@ -288,12 +291,12 @@ object Example : Automaton {
         for (i in 'a'..'d') setTransition(77, i, 2)
         for (i in 'f'..'z') setTransition(77, i, 2)
 
-		// Water
-		setTransition(1, 'W', 79)
-		setTransition(79, 'a', 80)
-		setTransition(80, 't', 81)
-		setTransition(81, 'e', 82)
-		setTransition(82, 'r', 83)
+        // Water
+        setTransition(1, 'W', 79)
+        setTransition(79, 'a', 80)
+        setTransition(80, 't', 81)
+        setTransition(81, 'e', 82)
+        setTransition(82, 'r', 83)
         for (i in 'b'..'z') setTransition(79, i, 2)
         for (i in 'a'..'s') setTransition(80, i, 2)
         for (i in 'u'..'z') setTransition(80, i, 2)
@@ -302,12 +305,12 @@ object Example : Automaton {
         for (i in 'a'..'q') setTransition(82, i, 2)
         for (i in 's'..'z') setTransition(82, i, 2)
 
-		// Angle
-		setTransition(1, 'A', 84)
-		setTransition(84, 'n', 85)
-		setTransition(85, 'g', 86)
-		setTransition(86, 'l', 87)
-		setTransition(87, 'e', 88)
+        // Angle
+        setTransition(1, 'A', 84)
+        setTransition(84, 'n', 85)
+        setTransition(85, 'g', 86)
+        setTransition(86, 'l', 87)
+        setTransition(87, 'e', 88)
         for (i in 'a'..'m') setTransition(84, i, 2)
         for (i in 'o'..'z') setTransition(84, i, 2)
         for (i in 'a'..'f') setTransition(85, i, 2)
@@ -317,13 +320,13 @@ object Example : Automaton {
         for (i in 'a'..'d') setTransition(87, i, 2)
         for (i in 'f'..'z') setTransition(87, i, 2)
 
-		// Radius
-		setTransition(1, 'R', 89)
-		setTransition(89, 'a', 90)
-		setTransition(90, 'd', 91)
-		setTransition(91, 'i', 92)
-		setTransition(92, 'u', 93)
-		setTransition(93, 's', 94)
+        // Radius
+        setTransition(1, 'R', 89)
+        setTransition(89, 'a', 90)
+        setTransition(90, 'd', 91)
+        setTransition(91, 'i', 92)
+        setTransition(92, 'u', 93)
+        setTransition(93, 's', 94)
         for (i in 'b'..'z') setTransition(89, i, 2)
         for (i in 'a'..'c') setTransition(90, i, 2)
         for (i in 'e'..'z') setTransition(90, i, 2)
@@ -334,11 +337,11 @@ object Example : Automaton {
         for (i in 'a'..'r') setTransition(93, i, 2)
         for (i in 't'..'z') setTransition(93, i, 2)
 
-		// Bend, Box
-		setTransition(1, 'B', 95)
-		setTransition(95, 'e', 96)
-		setTransition(96, 'n', 97)
-		setTransition(97, 'd', 98)
+        // Bend, Box
+        setTransition(1, 'B', 95)
+        setTransition(95, 'e', 96)
+        setTransition(96, 'n', 97)
+        setTransition(97, 'd', 98)
         for (i in 'a'..'d') setTransition(95, i, 2)
         for (i in 'f'..'n') setTransition(95, i, 2)
         for (i in 'a'..'m') setTransition(96, i, 2)
@@ -346,18 +349,18 @@ object Example : Automaton {
         for (i in 'a'..'c') setTransition(97, i, 2)
         for (i in 'e'..'z') setTransition(97, i, 2)
 
-		setTransition(95, 'o', 99)
-		setTransition(99, 'x', 100)
+        setTransition(95, 'o', 99)
+        setTransition(99, 'x', 100)
         for (i in 'a'..'w') setTransition(99, i, 2)
         for (i in 'y'..'z') setTransition(99, i, 2)
 
-		// Forest, Field
-		setTransition(1, 'F', 101)
-		setTransition(101, 'o', 102)
-		setTransition(102, 'r', 103)
-		setTransition(103, 'e', 104)
-		setTransition(104, 's', 105)
-		setTransition(105, 't', 106)
+        // Forest, Field
+        setTransition(1, 'F', 101)
+        setTransition(101, 'o', 102)
+        setTransition(102, 'r', 103)
+        setTransition(103, 'e', 104)
+        setTransition(104, 's', 105)
+        setTransition(105, 't', 106)
         for (i in 'a'..'h') setTransition(101, i, 2)
         for (i in 'j'..'n') setTransition(101, i, 2)
         for (i in 'p'..'z') setTransition(101, i, 2)
@@ -369,11 +372,11 @@ object Example : Automaton {
         for (i in 't'..'z') setTransition(104, i, 2)
         for (i in 'a'..'s') setTransition(105, i, 2)
         for (i in 'u'..'z') setTransition(105, i, 2)
-		
-		setTransition(101, 'i', 107)
-		setTransition(107, 'e', 108)
-		setTransition(108, 'l', 109)
-		setTransition(109, 'd', 110)
+
+        setTransition(101, 'i', 107)
+        setTransition(107, 'e', 108)
+        setTransition(108, 'l', 109)
+        setTransition(109, 'd', 110)
         for (i in 'a'..'d') setTransition(107, i, 2)
         for (i in 'f'..'z') setTransition(107, i, 2)
         for (i in 'a'..'k') setTransition(108, i, 2)
@@ -381,13 +384,13 @@ object Example : Automaton {
         for (i in 'a'..'c') setTransition(109, i, 2)
         for (i in 'e'..'z') setTransition(109, i, 2)
 
-		// Circle, Color
-		setTransition(1, 'C', 111)
-		setTransition(111, 'i', 112)
-		setTransition(112, 'r', 113)
-		setTransition(113, 'c', 114)
-		setTransition(114, 'l', 115)
-		setTransition(115, 'e', 116)
+        // Circle, Color
+        setTransition(1, 'C', 111)
+        setTransition(111, 'i', 112)
+        setTransition(112, 'r', 113)
+        setTransition(113, 'c', 114)
+        setTransition(114, 'l', 115)
+        setTransition(115, 'e', 116)
         for (i in 'a'..'h') setTransition(111, i, 2)
         for (i in 'j'..'n') setTransition(111, i, 2)
         for (i in 'p'..'z') setTransition(111, i, 2)
@@ -400,10 +403,10 @@ object Example : Automaton {
         for (i in 'a'..'d') setTransition(115, i, 2)
         for (i in 'f'..'z') setTransition(115, i, 2)
 
-		setTransition(111, 'o', 117)
-		setTransition(117, 'l', 118)
-		setTransition(118, 'o', 119)
-		setTransition(119, 'r', 120)
+        setTransition(111, 'o', 117)
+        setTransition(117, 'l', 118)
+        setTransition(118, 'o', 119)
+        setTransition(119, 'r', 120)
         for (i in 'a'..'k') setTransition(117, i, 2)
         for (i in 'm'..'z') setTransition(117, i, 2)
         for (i in 'a'..'n') setTransition(118, i, 2)
@@ -411,13 +414,13 @@ object Example : Automaton {
         for (i in 'a'..'q') setTransition(119, i, 2)
         for (i in 's'..'z') setTransition(119, i, 2)
 
-		// Polygon, Polyline, Point
-		setTransition(1, 'P', 121)
-		setTransition(121, 'o', 122)
-		setTransition(122, 'i', 123)
-		setTransition(123, 'n', 124)
-		setTransition(124, 't', 125)
-        for (i in 'a'..'n') setTransition(121, i, 2)
+        // Polygon, Polyline, Point, Park
+        setTransition(1, 'P', 121)
+        setTransition(121, 'o', 122)
+        setTransition(122, 'i', 123)
+        setTransition(123, 'n', 124)
+        setTransition(124, 't', 125)
+        for (i in 'b'..'n') setTransition(121, i, 2)
         for (i in 'p'..'z') setTransition(121, i, 2)
         for (i in 'a'..'h') setTransition(122, i, 2)
         for (i in 'j'..'k') setTransition(122, i, 2)
@@ -427,8 +430,8 @@ object Example : Automaton {
         for (i in 'a'..'s') setTransition(124, i, 2)
         for (i in 'u'..'z') setTransition(124, i, 2)
 
-		setTransition(122, 'l', 126)
-		setTransition(126, 'y', 127)
+        setTransition(122, 'l', 126)
+        setTransition(126, 'y', 127)
         for (i in 'a'..'x') setTransition(126, i, 2)
         setTransition(126, 'z', 2)
 
@@ -454,42 +457,53 @@ object Example : Automaton {
         for (i in 'a'..'d') setTransition(133, i, 2)
         for (i in 'f'..'z') setTransition(133, i, 2)
 
-		// Id - fixed
-		setTransition(1, 'd', 135)
-		setTransition(1, 'g', 135)
-		setTransition(1, 'j', 135)
-		setTransition(1, 'k', 135)
-		setTransition(1, 'm', 135)
-		for (i in 'p'..'s') setTransition(1, i, 135)
-		for (i in 'u'..'z') setTransition(1, i, 135)
-		for (i in 'D'..'K') setTransition(1, i, 135)
-		for (i in 'M'..'O') setTransition(1, i, 135)
-		setTransition(1, 'Q', 135)
-		for (i in 'S'..'V') setTransition(1, i, 135)
-		for (i in 'X'..'Z') setTransition(1, i, 135)
-		setTransition(1, '_', 135)
-
-		for (i in 'a'..'z') setTransition(135, i, 2)
-		for (i in 'A'..'Z') setTransition(135, i, 2)
-		for (i in '0'..'9') setTransition(135, i, 2)
-		setTransition(135, '_', 2)
-
-		// Strings
-		setTransition(1, '"', 137)
-		for (i in 'a'..'z') setTransition(137, i, 138)
-		for (i in 'A'..'Z') setTransition(137, i, 138)
-		for (i in '0'..'9') setTransition(137, i, 138)
-		setTransition(137, ' ', 138)
-
-		for (i in 'a'..'z') setTransition(138, i, 138)
-		for (i in 'A'..'Z') setTransition(138, i, 138)
-		for (i in '0'..'9') setTransition(138, i, 138)
-		setTransition(138, ' ', 138)
-
-		setTransition(138, '"', 139)
+        setTransition(121, 'a', 140)
+        setTransition(140, 'r', 141)
+        setTransition(141, 'k', 142)
+        for (i in 'a'..'q') setTransition(140, i, 2)
+        for (i in 's'..'z') setTransition(140, i, 2)
+        for (i in 'a'..'j') setTransition(141, i, 2)
+        for (i in 'l'..'z') setTransition(141, i, 2)
 
 
-		// mapping end states to values
+        // Id - fixed
+        setTransition(1, 'd', 135)
+        setTransition(1, 'g', 135)
+        setTransition(1, 'j', 135)
+        setTransition(1, 'k', 135)
+        setTransition(1, 'm', 135)
+        for (i in 'p'..'s') setTransition(1, i, 135)
+        for (i in 'u'..'z') setTransition(1, i, 135)
+        setTransition(1, 'D', 135)
+        setTransition(1, 'E', 135)
+        for (i in 'G'..'K') setTransition(1, i, 135)
+        for (i in 'M'..'O') setTransition(1, i, 135)
+        setTransition(1, 'Q', 135)
+        for (i in 'S'..'V') setTransition(1, i, 135)
+        for (i in 'X'..'Z') setTransition(1, i, 135)
+        setTransition(1, '_', 135)
+
+        for (i in 'a'..'z') setTransition(135, i, 2)
+        for (i in 'A'..'Z') setTransition(135, i, 2)
+        for (i in '0'..'9') setTransition(135, i, 2)
+        setTransition(135, '_', 2)
+
+        // Strings
+        setTransition(1, '"', 137)
+        for (i in 'a'..'z') setTransition(137, i, 138)
+        for (i in 'A'..'Z') setTransition(137, i, 138)
+        for (i in '0'..'9') setTransition(137, i, 138)
+        setTransition(137, ' ', 138)
+
+        for (i in 'a'..'z') setTransition(138, i, 138)
+        for (i in 'A'..'Z') setTransition(138, i, 138)
+        for (i in '0'..'9') setTransition(138, i, 138)
+        setTransition(138, ' ', 138)
+
+        setTransition(138, '"', 139)
+
+
+        // mapping end states to values
         setValue(2, ID_VALUE)
         setValue(3, FLOAT_VALUE)
         setValue(5, FLOAT_VALUE)
@@ -527,21 +541,22 @@ object Example : Automaton {
         setValue(72, GTEQ_VALUE)
         setValue(73, LT_VALUE)
         setValue(74, LTEQ_VALUE)
-		setValue(78, LINE_VALUE)
-		setValue(83, WATER_VALUE)
-		setValue(88, ANGLE_VALUE)
-		setValue(94, RADIUS_VALUE)
-		setValue(98, BEND_VALUE)
-		setValue(100, BOX_VALUE)
-		setValue(106, FOREST_VALUE)
-		setValue(110, FIELD_VALUE)
-		setValue(116, CIRCLE_VALUE)
-		setValue(120, COLOR_VALUE)
-		setValue(125, POINT_VALUE)
-		setValue(130, POLYGON_VALUE)
-		setValue(134, POLYLINE_VALUE)
-		setValue(135, ID_VALUE)
-		setValue(139, STRING_VALUE)
+        setValue(78, LINE_VALUE)
+        setValue(83, WATER_VALUE)
+        setValue(88, ANGLE_VALUE)
+        setValue(94, RADIUS_VALUE)
+        setValue(98, BEND_VALUE)
+        setValue(100, BOX_VALUE)
+        setValue(106, FOREST_VALUE)
+        setValue(110, FIELD_VALUE)
+        setValue(116, CIRCLE_VALUE)
+        setValue(120, COLOR_VALUE)
+        setValue(125, POINT_VALUE)
+        setValue(130, POLYGON_VALUE)
+        setValue(134, POLYLINE_VALUE)
+        setValue(135, ID_VALUE)
+        setValue(139, STRING_VALUE)
+        setValue(142, PARK_VALUE)
     }
 }
 

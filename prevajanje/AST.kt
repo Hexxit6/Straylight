@@ -15,9 +15,9 @@ data class Pt(val x: Double, val y: Double) {
 
     fun offset(s: Double, angle: Double) =
         this + Pt(cos(angle), sin(angle)) * s
-    
+
     override fun toString() =
-    	"[$x,$y]"
+        "[$x,$y]"
 }
 
 class Bezier(private val p0: Pt, private val p1: Pt, private val p2: Pt, private val p3: Pt) {
@@ -41,11 +41,11 @@ class Bezier(private val p0: Pt, private val p1: Pt, private val p2: Pt, private
         val midpoint = at(0.5)
         return p0.dist(midpoint) + midpoint.dist(p3)
     }
-    
+
     override fun toString(): String {
         var output: String = ""
-        // val points = this.flatten(resolutionToSegmentsCount(20.0))
-        val points = this.flatten(16)
+        val points = this.flatten(resolutionToSegmentsCount(20.0))
+        // val points = this.flatten(16)
         for (p in points) {
             output += p.toString()
             output += ','
@@ -77,35 +77,39 @@ class Bezier(private val p0: Pt, private val p1: Pt, private val p2: Pt, private
 
 
 interface Expr {
-	fun toGeoJSON(): String
+    fun toGeoJSON(): String
+}
+
+class Nil() : Expr {
+    override fun toGeoJSON(): String = ""
 }
 
 class City(private val content: Expr) : Expr {
-	override fun toGeoJSON(): String =
-		"{\"type\":\"FeatureCollection\",\"features\":[${content.toGeoJSON()}]}"
+    override fun toGeoJSON(): String =
+        "{\"type\":\"FeatureCollection\",\"features\":[${content.toGeoJSON()}]}"
 }
 
 class Point(val lat: Double, val long: Double) : Expr {
-	override fun toGeoJSON(): String =
-		"{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"properties\":{},\"coordinates\":[${lat},${long}]}}"
-    
+    override fun toGeoJSON(): String =
+        "{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"properties\":{},\"coordinates\":[${lat},${long}]}}"
+
     override fun toString(): String =
-		"[${lat},${long}]"
-    
+        "[${lat},${long}]"
+
     fun toPt(): Pt =
-    	Pt(lat, long)
+        Pt(lat, long)
 }
 
 class Line(private val point1: Point, private val point2: Point) : Expr {
-	override fun toGeoJSON(): String =
-		"{\"type\":\"Feature\",\"properties\":{},\"geometry\":{\"type\":\"LineString\",\"coordinates\":[${point1.toString()},${point2.toString()}]}}"
+    override fun toGeoJSON(): String =
+        "{\"type\":\"Feature\",\"properties\":{},\"geometry\":{\"type\":\"LineString\",\"coordinates\":[${point1.toString()},${point2.toString()}]}}"
 }
 
 class Box(private val point1: Point, private val point2: Point) : Expr {
     override fun toGeoJSON(): String {
         val dl: Point = Point(point1.lat, point2.long)
         val ur: Point = Point(point2.lat, point1.long)
-        return "{\"type\":\"Feature\",\"properties\":{},\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[${point1.toString()},${dl.toString()},${ur.toString()},${point2.toString()},${point1.toString()}]}}"
+        return "{\"type\":\"Feature\",\"properties\":{},\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[${point1.toString()},${dl.toString()},${point2.toString()},${ur.toString()},${point1.toString()}]]}}"
     }
 }
 
@@ -120,28 +124,48 @@ class Bend(private val point1: Point, private val point2: Point, private val ang
 
 class Circle(private val point: Point, private val radius: Double) : Expr {
     override fun toGeoJSON(): String {
-        
+
         val left: Pt = Point(point.lat - radius, point.long).toPt()
         val up: Pt = Point(point.lat, point.long + radius).toPt()
         val down: Pt = Point(point.lat, point.long - radius).toPt()
         val right: Pt = Point(point.lat + radius, point.long).toPt()
-        
-        val angle: Double = 45.0
+
+        val angle: Double = 53.0
         val bend1: Bezier = Bezier.bend(left, up, angle)
         val bend2: Bezier = Bezier.bend(up, right, angle)
         val bend3: Bezier = Bezier.bend(right, down, angle)
         val bend4: Bezier = Bezier.bend(down, left, angle)
-        
-        return "{\"type\":\"Feature\",\"properties\":{},\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[$bend1,$bend2,$bend3,$bend4]}}"
+
+        return "{\"type\":\"Feature\",\"properties\":{},\"geometry\":{\"type\":\"Polygon\",\"coordinates\":[[$bend1,$bend2,$bend3,$bend4]]}}"
     }
 }
 
+class Comma(private val content1: Expr, private val content2: Expr) : Expr {
+    override fun toGeoJSON(): String {
+        // add check if element is Nil() that it doesn't use a comma
+        if (content1::class.simpleName == "Nil" && content2::class.simpleName != "Nil" ) return content2.toGeoJSON()
+        else if (content1::class.simpleName != "Nil" && content2::class.simpleName == "Nil" ) return content1.toGeoJSON()
+        else return content1.toGeoJSON() + ',' + content2.toGeoJSON()
+    }
+}
 
-/* fun main(args: Array<String>) { */
-/*     // val expr: Expr = City(Line(Point(2.0,4.0), Point(3.0,6.0))) */
-/*     // val expr: Expr = City(Box(Point(2.0,4.0), Point(3.0,6.0))) */
-/*     // val expr: Expr = City(Bend(Point(0.0,0.0), Point(1.0,1.0), 45.0)) */
-/*     val expr: Expr = City(Circle(Point(0.0,0.0), 1.0)) */
-/*     println(expr.toGeoJSON()) */
-/* } */
+class Water(private val content: Expr) : Expr {
+    override fun toGeoJSON(): String =
+        content.toGeoJSON()
+}
+
+class Park(private val content: Expr) : Expr {
+    override fun toGeoJSON(): String =
+        content.toGeoJSON()
+}
+
+class Forest(private val content: Expr) : Expr {
+    override fun toGeoJSON(): String =
+        content.toGeoJSON()
+}
+
+class Field(private val content: Expr) : Expr {
+    override fun toGeoJSON(): String =
+        content.toGeoJSON()
+}
 

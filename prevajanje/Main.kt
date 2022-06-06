@@ -7,30 +7,8 @@ fun main(args: Array<String>) {
 	// 	println("reject")
     // }
 
-    // val expr: Expr = City(Line(Point(2.0,4.0), Point(3.0,6.0)))
-    // val expr: Expr = City(Box(Point(2.0,4.0), Point(3.0,6.0)))
-    // val expr: Expr = City()
-    val expr: Expr = City(
-        Comma(
-            Comma(
-                Line(
-                    Point(3.0,4.0),
-                    Point(3.0,6.0)
-                ),
-                Line(
-                    Point(2.0,4.0),
-                    Point(3.0,6.0)
-                )
-            ),
-            Line(
-                Point(2.0,4.0),
-                Point(3.0,4.0)
-            )
-        )
-    )
-    println(expr.toGeoJSON())
-
-    var scanner = Scanner(Example, "city{ Line(Point(3.0, 4.0), Point(3.0, 6.0)); Line(Point(2.0, 4.0), Point(3.0, 6.0)); Line(Point(2.0, 4.0), Point(3.0, 4.0)); }".byteInputStream())
+	var scanner = Scanner(Example, File(args[0]).inputStream())
+    // printTokens(scanner)
     val parser = Parser(scanner)
     println(parser.parse())
 }
