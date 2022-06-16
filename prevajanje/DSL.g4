@@ -1,140 +1,243 @@
 grammar DSL;
 
+//================
+// TOKENS
+//================
+
 UNIT: 'nil';
-FLOAT: [0-9]+('.'[0-9]+)?;  // ('+'|'-')? -> should this have a preffix or do i make that separate
-COLOR: 'blue'|'teal'|'cyan'|'green'|'lime'|'yellow'|'pink'|'white'|'lightgray'|'gray'|'darkgray'|'black'|'olive'|'brown'|'orange'|'red'|'purple'|'magenta'|'violet'|HEX;
-// STRING: '"' ~('\r'|'\n'|'"'|' ')+ '"';
+FLOAT: [0-9]+('.'[0-9]+)?;
+HEX: '#'[a-fA-F0-9]{6};
+
+CITY: 'city';
+VAR: 'let';
+IF: 'if';
 ELIF: 'elif';
 ELSE: 'else';
-VAR: 'let';
+AND: 'and';
+OR: 'or';
+FOR: 'for';
+BREAK: 'break';
+FUNCTION: 'func';
 TRUE: 'true';
 FALSE: 'false';
-HEX: '#'[a-fA-F0-9]{6};
-ID: [_a-zA-Z][_a-zA-Z0-9]*;
 WS: [ \n\t\r]+ -> skip;
 
+// other keywords:
+POINT: 'Point';
+COLOR: 'Color';
+LINE: 'Line';
+BEND: 'Bend';
+ANGLE: 'Angle';
+BOX: 'Box';
+RADIUS: 'Radius';
+CIRCLE: 'Circle';
+POLYLINE: 'Polyline';
+POLYGON: 'Polygon';
+
+WATER: 'Water';
+PARK: 'Park';
+FOREST: 'Forest';
+FIELD: 'Field';
+
+EQUALS: '=';
+SEMI: ';';
+PLUS: '+';
+MINUS: '-';
+TIMES: '*';
+DIVIDE: '/';
+LPAREN: '(';
+RPAREN: ')';
+LBRACKET: '[';
+RBRACKET: ']';
+LBRACE: '{';
+RBRACE: '}';
+COMMA: ',';
+EXCLAMATION: '!';
+
+STRING: '"' ~('\r'|'\n'|'"')+ '"';
+ID: [_a-zA-Z]+[_a-zA-Z0-9]*;
+
+// COLOR: 'blue'|'teal'|'cyan'|'green'|'lime'|'yellow'|'pink'|'white'|'lightgray'|'gray'|'darkgray'|'black'|'olive'|'brown'|'orange'|'red'|'purple'|'magenta'|'violet';
+// colors are from latex
+
+
+//================
+// RULES
+//================
+init
+    : city
+    | function init
+    ;
 
 city
-    : 'city' ID block EOF
-    ;
+	: CITY ID block EOF
+	;
 
 block
-    : '{' blockStatements '}'
-    ;
+	: LBRACE (statements|) RBRACE
+	;
 
-blockStatements
-    : blockStatement blockStatements?
-    ;
-
-blockStatement
-    : localVariableDeclaration
-    | statement
-    ;
-
-localVariableDeclaration
-    : VAR ID '=' expression ';'   // -> look at this more closely!
-    ;
+statements
+	: statement statements?
+	;
 
 statement
-    : 'if' parExpression statement (ELIF parExpression statement)? (ELSE statement)?        // -> look at this more closely!
-    | 'for' '(' forControl ')' block
-    | block
-    ;
-
-point
-    : '(' expression ',' expression ')'
-    ;
-
-parExpression
-    : '(' expression ')'
-    ;
-
-forInit
-    : localVariableDeclaration
-    | expressionList
-    ;
-
-list
-    : '[' expressionList ']'
-    ;
-
-expressionList
-    : expression (',' expression)*
-    ;
-
-arguments
-    : '(' expressionList? ')'
-    ;
-
-forControl
-    : forInit ';' comparison ';' forUpdate=expressionList       // TODO - simplify?
-    ;
-
-comparison
-    : expression bop=('<=' | '>=' | '>' | '<') expression
-    | expression bop=('==' | '!=') expression
-    ;
-
-expression
-    : literal
-    // TODO - add operations (+,-,*,/,())
-    ;
-
-literal
-    : ID
-    | FLOAT
-    //| STRING
-    ;
-
-color
-    : 'color' '(' COLOR ')'
-    ;
-
-command
-    : line
+	: initialization
+	| assignment
+	| flow
+	| for
+	| BREAK
+	| funcall
+    | line
     | bend
     | box
     | circle
     | polyline
     | polygon
+    | water
+    | park
+    | forest
+    | field
+	;
+
+initialization
+	: VAR ID EQUALS values SEMI
+	;
+
+assignment
+	: ID EQUALS values SEMI
+	;
+
+values
+    : expr
+    | STRING
+    | point
+    | list
     ;
 
+// expressions LL(1):
+expr
+    : term expr1
+    ;
+
+expr1
+    : PLUS term expr1
+    | MINUS term expr1
+    |
+    ;
+
+term
+    : factor term1
+    ;
+
+term1
+    : TIMES factor term1
+    | DIVIDE factor term1
+    |
+    ;
+
+factor
+    : LPAREN expr RPAREN
+    | ID
+    | FLOAT
+    | MINUS FLOAT   // ????? -> is this a good solution? -> it fixes negative values but it also allows for: -1--1 != 1
+    ;
+
+point
+    : POINT LPAREN expr COMMA expr RPAREN
+    ;
+
+list
+    : LBRACKET values (COMMA values)* RBRACKET
+    ;
+
+flow
+    : IF condition block (ELIF condition block)* (ELSE block)?
+    ;
+
+condition
+    : LPAREN comparison (AND comparison|OR comparison)* RPAREN
+    ;
+
+// comparisons LL(1):
+comparison
+    : expr comp
+    ;
+
+comp
+    : '<=' expr
+    | '>=' expr
+    |  '<' expr
+    | '>' expr
+    | '==' expr
+    | '!=' expr
+    ;
+
+
+// for (val var=1; 1>2 and 3==3; var = var+1) {}
+for
+    : FOR LPAREN initialization comparison ((AND comparison|OR comparison)+)? SEMI ID EQUALS expr RPAREN block
+    ;
+
+// function definition and function call:
+function
+    : FUNCTION ID LPAREN (VAR ID (COMMA VAR ID)*)? RPAREN block
+    ;
+
+funcall
+    : EXCLAMATION ID LPAREN (values (COMMA values)*)? RPAREN
+    ;
+
+// predefined functions:
 line
-    : 'line' '(' point ',' point ')'
+    : LINE LPAREN point COMMA point RPAREN
     ;
 
 angle
-    : 'angle' '(' FLOAT ')'
+    : ANGLE LPAREN expr RPAREN
     ;
 
 bend
-    : 'bend' '(' point ',' point ',' angle ')'
+    : BEND LPAREN point COMMA point COMMA angle RPAREN
     ;
 
 box
-    : 'box' '(' point ',' point ')'
+    : BOX LPAREN point COMMA point RPAREN
     ;
 
 radius
-    : 'radius' '(' FLOAT ')'
+    : RADIUS LPAREN expr RPAREN
     ;
 
 circle
-    : 'circle' '(' point ',' radius ')'
+    : CIRCLE LPAREN point COMMA radius RPAREN
     ;
 
 points
-    : point (',' points)?
+    : point (COMMA point)*
     ;
 
 polyline
-    : 'polyline' '(' points ')'
+    : POLYLINE LPAREN points RPAREN
     ;
 
 polygon
-    : 'polygon' '(' FLOAT ')'
+    : POLYGON LPAREN FLOAT RPAREN
     ;
 
-function
-    : 'func' ID arguments block
+// code blocks (water, park, ...):
+water
+    : WATER block
+    ;
+
+park
+    : PARK block
+    ;
+
+forest
+    : FOREST block
+    ;
+
+field
+    : FIELD block
     ;

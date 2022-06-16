@@ -7,11 +7,89 @@ city Maribor {
 
 // Example 2:
 city Maribor {
-    if (condition) {
+    let someVar = 0.3453;
+    let somevar2 = 123123.123123;
+    let _ = "some random string";
+    a = (0);
+    b = a;
+    asd = asd + (asd / (1 * 1));
+    c = Point((1*0), 2.3);
+    nekaj = ["rand1", (val+1), ident, [1, 2]];
+}
+
+// Example 3:
+city Maribor {
+    if (1>2) {
         let nekaj = 1;
-    } elif (condition2) {
+    } elif (1<2 and 2>3 or (1*1)!=(0.1/10)) {
         let nekaj = 2;
     } else {
         let nekaj = 3;
     }
 }
+
+// Example 4:
+func imeFunkcije2(let a, let b, let c){
+}
+
+func imeFunkcije2(){
+        let user = "Ashes to ashes, dust to dust";
+}
+
+city Maribor {
+    let someVar = 0.3453;
+    nekaj = 123;
+}
+
+// Example 5:
+city Maribor {
+    if((a*(a+1)) > b and var != 1 or 0==0){
+    }
+
+    if(1>2 or 2<1 or 3==1 or -1--1 != 1){
+    }
+}
+
+// Example 6:
+city Maribor {
+    let someVar = 0.3453;
+    nekaj = 123;
+
+    for (let i=1; i>2; i=i+1) {
+    }
+
+    for (let i=1; i>2 and 2<(4-1); i=i+1) {
+        if (name == 1) {
+            name = 2;
+        }
+    }
+}
+
+// Example 7:
+city Maribor {
+    Water {
+        let a = 1;
+        let b = 1;
+    }
+    Park {
+        let a = 1;
+        let b = 1;
+    }
+    Forest {
+        let a = 1;
+    }
+    Field {
+    }
+}
+
+// Example 8:
+city Maribor {
+    Polyline(Point(1,1), Point(1,1))
+    Polyline(Point(1,1), Point(1,1))
+    Polygon(6)
+    Polygon(4.6)
+}
+
+// Example 9:
+
+// Example 10:
