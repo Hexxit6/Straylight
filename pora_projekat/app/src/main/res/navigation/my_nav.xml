@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.pora_projekat.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_imageInputFragment"
+            app:destination="@id/imageInputFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_soundInputFragment"
+            app:destination="@id/soundInputFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_imageSimulationFragment"
+            app:destination="@id/imageSimulationFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_soundSimulationFragment"
+            app:destination="@id/soundSimulationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageInputFragment"
+        android:name="com.example.pora_projekat.ImageInputFragment"
+        android:label="fragment_image_input"
+        tools:layout="@layout/fragment_image_input" >
+        <action
+            android:id="@+id/action_imageInputFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_imageInputFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/soundInputFragment"
+        android:name="com.example.pora_projekat.SoundInputFragment"
+        android:label="fragment_sound_input"
+        tools:layout="@layout/fragment_sound_input" >
+        <action
+            android:id="@+id/action_soundInputFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_soundInputFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageSimulationFragment"
+        android:name="com.example.pora_projekat.ImageSimulationFragment"
+        android:label="fragment_image_simulation"
+        tools:layout="@layout/fragment_image_simulation" >
+        <action
+            android:id="@+id/action_imageSimulationFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_imageSimulationFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/soundSimulationFragment"
+        android:name="com.example.pora_projekat.SoundSimulationFragment"
+        android:label="fragment_sound_simulation"
+        tools:layout="@layout/fragment_sound_simulation" >
+        <action
+            android:id="@+id/action_soundSimulationFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.pora_projekat.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_mapFragment_to_imageInputFragment"
+            app:destination="@id/imageInputFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_imageSimulationFragment"
+            app:destination="@id/imageSimulationFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_soundInputFragment"
+            app:destination="@id/soundInputFragment" />
+    </fragment>
+</navigation>
