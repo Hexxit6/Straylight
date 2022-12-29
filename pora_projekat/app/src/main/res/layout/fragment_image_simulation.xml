@@ -148,5 +148,39 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/MaterialButtonGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Off"
+                app:backgroundTint="@color/primaryDark" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSimulation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Simulation"
+                app:backgroundTint="@color/primaryDark" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="On"
+                app:backgroundTint="@color/primaryDark" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -109,7 +109,6 @@ class SoundInputFragment : Fragment() {
         var musicDirectory: File? = contextWrapper.getExternalFilesDir(Environment.DIRECTORY_MUSIC)
         var file = File(musicDirectory,"testRecordingFile" + ".mp3")
         return file.path
-
     }
 
     companion object {
