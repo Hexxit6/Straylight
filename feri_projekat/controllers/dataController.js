@@ -255,21 +255,31 @@ module.exports = {
         }
     },
     searchStations: function (req,res) {
-        var name = req.params.name;
+        var address = req.params.name;
 
-        DataModel.aggregate([
-            {$lookup: {
-                    from: "stations",
-                    localField: "fromStation",
-                    foreignField: "address",
-                    as: "stations"
-                }},
-            {$match : {"stations.address": req.query.tag}}
-        ], function (err, datas) {
-            var data =[];
-            data.datas = datas;
-            //return res.json(datas);
-            return res.render('data/search', {datas: datas, name:name})
-        });
+        StationModel.findOne({address: address}, function (err, station) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting station.',
+                    error: err
+                });
+            }
+
+            if (!station) {
+                return res.status(404).json({
+                    message: 'No such station'
+                });
+            }
+            DataModel.findOne({fromStation: address}).sort({"date": -1}).exec(function (err, datas) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when getting data.',
+                        error: err
+                    });
+                }
+                station.datas = datas;
+
+                return res.json({station: station, data: datas});
+            })});
     }
 };
