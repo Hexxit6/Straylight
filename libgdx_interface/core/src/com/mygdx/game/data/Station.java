@@ -29,6 +29,9 @@ public class Station extends Geolocation {
         this.url = new URL(url);
         this.refresh();
     }
+    public Station(double latitude, double longitude) {
+        super(latitude,longitude);
+    }
 
     public void refresh() {
         try {

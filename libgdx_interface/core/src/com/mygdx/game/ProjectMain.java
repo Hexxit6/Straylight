@@ -3,9 +3,11 @@ package com.mygdx.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -18,8 +20,16 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.data.Station;
 import com.mygdx.game.data.Stations;
@@ -31,11 +41,13 @@ import com.mygdx.game.utils.ZoomXY;
 
 import java.io.IOException;
 
-public class ProjectMain extends ApplicationAdapter implements GestureDetector.GestureListener {
+public class ProjectMain extends ApplicationAdapter implements GestureDetector.GestureListener, InputProcessor {
 
     private SpriteBatch batch;
+    private Sprite sprite;
     private ShapeRenderer shapeRenderer;
     private Vector3 touchPosition;
+    public BitmapFont font;
 
     private TiledMap tiledMap;
     private TiledMapRenderer tiledMapRenderer;
@@ -53,6 +65,18 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
 
     // Stations
     Stations stations;
+    private Stage stage;
+    TextField latitudeField;
+    TextField longitudeField;
+    TextField stationName;
+    TextButton addBtn;
+
+    double longitude = 0;
+    double latitude = 0;
+    String newStationLat;
+    String newStationLng;
+    boolean mapClicked = false;
+    boolean addedStation = false;
 
     @Override
     public void create() {
@@ -61,6 +85,11 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
 
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
+        stage = new Stage();
+
+        sprite = new Sprite(Assets.plusImg);
+        sprite.setPosition(WIDTH - 100, 70);
+        sprite.setSize(80,80);
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, WIDTH, HEIGHT);
@@ -70,8 +99,64 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
         camera.zoom = 2f;
         camera.update();
 
+        font = new BitmapFont();
+        font.getData().setScale(2);
+
         touchPosition = new Vector3();
         Gdx.input.setInputProcessor(new GestureDetector(this));
+
+        Gdx.input.setInputProcessor(new InputProcessor() {
+            @Override
+            public boolean keyDown(int keycode) {
+                return false;
+            }
+
+            @Override
+            public boolean keyUp(int keycode) {
+                return false;
+            }
+
+            @Override
+            public boolean keyTyped(char character) {
+                return false;
+            }
+
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                // convert screen coordinates to world coordinates
+                Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
+
+                Rectangle plusIcon = sprite.getBoundingRectangle();
+
+                // check if the texture was clicked
+                if (plusIcon.contains(worldCoords.x, worldCoords.y)) {
+                    Gdx.input.setInputProcessor(stage);
+                    stage.addActor(createUI());
+                }
+
+                return false;
+            }
+
+            @Override
+            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+                return false;
+            }
+
+            @Override
+            public boolean touchDragged(int screenX, int screenY, int pointer) {
+                return false;
+            }
+
+            @Override
+            public boolean mouseMoved(int screenX, int screenY) {
+                return false;
+            }
+
+            @Override
+            public boolean scrolled(float amountX, float amountY) {
+                return false;
+            }
+        });
 
         try {
             //in most cases, geolocation won't be in the center of the tile because tile borders are predetermined (geolocation can be at the corner of a tile)
@@ -112,9 +197,24 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
 
+        stage.act();
+        stage.draw();
+
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         drawStations();
+        sprite.draw(batch);
+        if(mapClicked) {
+            font.setColor(Color.RED);
+            font.draw(batch, "User clicked at - long: " + longitude + ", lat: " + latitude , WIDTH / 3f - 30, 50);
+        }
+        if(addedStation) {
+        //    PixelPosition marker = MapRasterTiles.getPixelPosition(Double.parseDouble(newStationLat),Double.parseDouble(newStationLng), MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
+            batch.setColor(Color.RED);
+        //    batch.draw(Assets.stationImg, marker.x, marker.y);
+            stations.list.add(new Station(Double.parseDouble(newStationLat),Double.parseDouble(newStationLng)));
+            batch.setColor(Color.WHITE);
+        }
         batch.end();
         // drawMarkers();
     }
@@ -124,6 +224,34 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
             PixelPosition marker = MapRasterTiles.getPixelPosition(station.lat, station.lng, MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
             batch.draw(Assets.stationImg, marker.x, marker.y);
         }
+    }
+    private Actor createUI() {
+        final Table table = new Table();
+
+        table.setPosition(WIDTH / 3f - 30, HEIGHT / 3f - 30);
+        //table.setFillParent(true);
+
+        latitudeField = new TextField("Latitude: ", Assets.skin);
+        longitudeField = new TextField("Longitude: ", Assets.skin);
+        stationName = new TextField("Station Name:", Assets.skin);
+        addBtn = new TextButton("ADD", Assets.skin);
+
+        table.add(stationName).expandX().fillX().row();
+        table.add(latitudeField).expandX().fillX().row();
+        table.add(longitudeField).expandX().fillX().row();
+        table.add(addBtn).expandX().fillX().row();
+
+        addBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                newStationLat = latitudeField.getText();
+                newStationLng = longitudeField.getText();
+                addedStation = true;
+                table.remove();
+            }
+        });
+
+        return table;
     }
 
     // private void drawMarkers() {
@@ -144,8 +272,6 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
 
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
-        touchPosition.set(x, y, 0);
-        camera.unproject(touchPosition);
         return false;
     }
 
@@ -213,6 +339,22 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             camera.translate(0, 3, 0);
         }
+        TiledMapTileLayer layer = (TiledMapTileLayer)tiledMap.getLayers().get(0); // get the first layer of the map
+
+        if (Gdx.input.justTouched()) {
+            Vector3 clickCoordinates = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            Vector3 position = camera.unproject(clickCoordinates);
+            int x = (int) (position.x / layer.getTileWidth());
+            int y = (int)(position.y / layer.getTileHeight());
+            TiledMapTileLayer.Cell cell = layer.getCell(x, y);
+            if (cell != null) {
+
+
+               longitude = MapRasterTiles.tile2long(x + beginTile.x,ZOOM);
+               latitude = MapRasterTiles.tile2lat(y + beginTile.y, ZOOM);
+               mapClicked = true;
+            }
+        }
 
         camera.zoom = MathUtils.clamp(camera.zoom, 0.5f, 2f);
 
@@ -222,4 +364,46 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
         camera.position.x = MathUtils.clamp(camera.position.x, effectiveViewportWidth / 2f, WIDTH - effectiveViewportWidth / 2f);
         camera.position.y = MathUtils.clamp(camera.position.y, effectiveViewportHeight / 2f, HEIGHT - effectiveViewportHeight / 2f);
     }
+
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(float amountX, float amountY) {
+        return false;
+    }
+
 }
