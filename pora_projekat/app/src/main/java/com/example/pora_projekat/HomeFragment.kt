@@ -54,6 +54,9 @@ class HomeFragment : Fragment() {
         binding.constraintLayoutSoundInput.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_soundInputFragment)
         }
+        binding.constraintLayoutSoundSimulation.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_soundSimulationFragment)
+        }
     }
 
     companion object {

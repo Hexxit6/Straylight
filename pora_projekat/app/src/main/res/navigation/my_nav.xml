@@ -67,6 +67,9 @@
         <action
             android:id="@+id/action_soundSimulationFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_soundSimulationFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
@@ -82,5 +85,8 @@
         <action
             android:id="@+id/action_mapFragment_to_soundInputFragment"
             app:destination="@id/soundInputFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_soundSimulationFragment"
+            app:destination="@id/soundSimulationFragment" />
     </fragment>
 </navigation>
