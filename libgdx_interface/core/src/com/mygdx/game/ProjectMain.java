@@ -5,6 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -80,8 +82,8 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
 
     @Override
     public void create() {
-        stations = new Stations();
         Assets.load();
+        stations = new Stations();
 
         shapeRenderer = new ShapeRenderer();
         batch = new SpriteBatch();
@@ -202,29 +204,36 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        drawStations();
+        drawStations(Gdx.graphics.getDeltaTime());
         sprite.draw(batch);
         if(mapClicked) {
             font.setColor(Color.RED);
             font.draw(batch, "User clicked at - long: " + longitude + ", lat: " + latitude , WIDTH / 3f - 30, 50);
         }
         if(addedStation) {
-        //    PixelPosition marker = MapRasterTiles.getPixelPosition(Double.parseDouble(newStationLat),Double.parseDouble(newStationLng), MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
             batch.setColor(Color.RED);
-        //    batch.draw(Assets.stationImg, marker.x, marker.y);
             stations.list.add(new Station(Double.parseDouble(newStationLat),Double.parseDouble(newStationLng)));
             batch.setColor(Color.WHITE);
         }
         batch.end();
-        // drawMarkers();
+
+        Gdx.gl.glEnable(GL30.GL_BLEND);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        drawAreas();
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL30.GL_BLEND);
     }
 
-    private void drawStations() {
+    private void drawStations(float delta) {
         for (Station station : stations.list) {
             PixelPosition marker = MapRasterTiles.getPixelPosition(station.lat, station.lng, MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
-            batch.draw(Assets.stationImg, marker.x, marker.y);
+            batch.draw(Assets.stationImg, marker.x-(Assets.stationImg.getWidth()/2), marker.y-(Assets.stationImg.getHeight()/2));
+            station.drawParticles(batch, delta, marker.x, marker.y);
         }
     }
+
+
     private Actor createUI() {
         final Table table = new Table();
 
@@ -254,17 +263,29 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
         return table;
     }
 
-    // private void drawMarkers() {
-    //     PixelPosition marker = MapRasterTiles.getPixelPosition(MARKER_GEOLOCATION.lat, MARKER_GEOLOCATION.lng, MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
-    //     shapeRenderer.setProjectionMatrix(camera.combined);
-    //     shapeRenderer.setColor(Color.RED);
-    //     shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-    //     shapeRenderer.circle(marker.x, marker.y, 10);
-    //     shapeRenderer.end();
-    // }
+    private void drawAreas() {
+        shapeRenderer.setColor(new Color(0, 1, 0, 0.5f));
+
+        PixelPosition vrt = MapRasterTiles.getPixelPosition(46.561851, 15.637359, MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
+        float vrtW = 60; float vrtH = 30;
+        shapeRenderer.rect(vrt.x, vrt.y, vrtW/2, vrtH/2, vrtW, vrtH, 1.0f, 1.0f, -20f);
+
+        PixelPosition magdalena = MapRasterTiles.getPixelPosition(46.550595, 15.644463, MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
+        float magdalenaW = 20; float magdalenaH = 40;
+        shapeRenderer.rect(magdalena.x, magdalena.y, magdalenaW/2, magdalenaH/2, magdalenaW, magdalenaH, 1.0f, 1.0f, -20f);
+
+        PixelPosition rakusev = MapRasterTiles.getPixelPosition(46.561222, 15.650760, MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
+        float rakusevW = 15; float rakusevH = 20;
+        shapeRenderer.rect(rakusev.x-(rakusevW/2), rakusev.y-(rakusevH/2), rakusevW/2, rakusevH/2, rakusevW, rakusevH, 1.0f, 1.0f, 0);
+
+        PixelPosition sodobna = MapRasterTiles.getPixelPosition(46.558788, 15.654294, MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
+        float sodobnaW = 10; float sodobnaH = 20;
+        shapeRenderer.rect(sodobna.x-(sodobnaW/2), sodobna.y-(sodobnaH/2), sodobnaW/2, sodobnaH/2, sodobnaW, sodobnaH, 1.0f, 1.0f, -10);
+    }
 
     @Override
     public void dispose() {
+        for (Station station : stations.list) station.dipose();
         batch.dispose();
         shapeRenderer.dispose();
         Assets.dispose();
