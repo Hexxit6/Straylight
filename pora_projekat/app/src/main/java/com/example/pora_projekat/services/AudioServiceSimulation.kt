@@ -8,8 +8,8 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.media.MediaRecorder
+import android.net.Uri
 import android.os.Build
-import android.os.Environment
 import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -20,17 +20,16 @@ import java.io.IOException
 import java.util.Timer
 import java.util.TimerTask
 
-class AudioService : Service() {
+class AudioServiceSimulation : Service() {
 
-    private var fromTime: Float? = 0f       // TODO: change
-    private var toTime: Float? = 24f        // TODO: change
+    private var fromTime: Float? = 0f
+    private var toTime: Float? = 24f
     private var interval: Int? = 60000
     private var duration: Int? = 10000
     private var latitude: Float? = 0f
     private var longitude: Float? = 0f
 
     private var firstRun = true
-    private var mediaRecorder: MediaRecorder? = null
     private var recording = false
     private var timer: Timer? = null
     private var filepath: String = ""
@@ -67,15 +66,9 @@ class AudioService : Service() {
             while (true) {
                 if (!recording) {
                     try {
-                        filepath = getOutputFileName()
-                        mediaRecorder = MediaRecorder()
-                        mediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
-                        mediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-                        mediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-                        mediaRecorder?.setOutputFile(filepath)
-                        mediaRecorder?.prepare()
-                        mediaRecorder?.start()
                         recording = true
+                        filepath = applicationContext.assets.openFd("audio_file.3gp").fileDescriptor.toString()
+                        Log.d("AudioServiceSimulation", "GOT THE RESOURCE PATH: $filepath") // TODO: remove
 
                         timer = Timer()
                         timer?.schedule(object : TimerTask() {
@@ -96,19 +89,8 @@ class AudioService : Service() {
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
     }
 
-    @SuppressLint("LogNotTimber")
-    private fun getOutputFileName(): String {
-        val file = File(filesDir.path, "${System.currentTimeMillis()}.3gp")
-        Log.d("AudioService", "Output path: ${file.path}")
-        return file.path
-    }
-
     private fun stopRecording() {
         if (recording) {
-            mediaRecorder?.stop()
-            mediaRecorder?.reset()
-            mediaRecorder?.release()
-            mediaRecorder = null
             recording = false
             timer?.cancel()
             timer = null
@@ -129,8 +111,8 @@ class AudioService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     companion object {
-        private const val CHANNEL_ID = "audio_service_channel"
-        private const val CHANNEL_NAME = "Audio Service"
+        private const val CHANNEL_ID = "audio_service_simulation_channel"
+        private const val CHANNEL_NAME = "Audio Service Simulation"
         private const val NOTIFICATION_ID = 1
 
         const val EXTRA_FROM = "from"

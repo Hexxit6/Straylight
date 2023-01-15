@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.Navigation
 import com.example.pora_projekat.databinding.FragmentImageInputBinding
+import com.example.pora_projekat.services.APIUtil
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -90,6 +91,7 @@ class ImageInputFragment : Fragment(){
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if(resultCode == RESULT_OK) {
             binding.txtViewUrl.text = image_url.toString()
+            // APIUtil.uploadFile(image_url!!.path.toString(), APIUtil.URL, APIUtil.MEDIA_TYPE_JPEG) // TODO: uncomment this
         }
     }
 
