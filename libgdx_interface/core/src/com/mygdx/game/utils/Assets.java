@@ -13,7 +13,7 @@ public class Assets {
 
     public static void load() {
         stationImg = new Texture("station.png");
-        plusImg = new Texture("add.png");
+        plusImg = new Texture("plus.png");
         skin = new Skin(Gdx.files.internal("neon_skin/neon-ui.json"));
     }
 

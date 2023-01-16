@@ -50,6 +50,7 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
     private ShapeRenderer shapeRenderer;
     private Vector3 touchPosition;
     public BitmapFont font;
+    private Rectangle rect;
 
     private TiledMap tiledMap;
     private TiledMapRenderer tiledMapRenderer;
@@ -90,7 +91,7 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
         stage = new Stage();
 
         sprite = new Sprite(Assets.plusImg);
-        sprite.setPosition(WIDTH - 100, 70);
+        sprite.setPosition(WIDTH - 150, 70);
         sprite.setSize(80,80);
 
         camera = new OrthographicCamera();
@@ -201,14 +202,21 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
 
         stage.act();
         stage.draw();
+        Gdx.gl.glEnable(GL30.GL_BLEND);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        drawAreas();
+        drawMessage();
+        shapeRenderer.end();
 
+        Gdx.gl.glDisable(GL30.GL_BLEND);
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         drawStations(Gdx.graphics.getDeltaTime());
         sprite.draw(batch);
         if(mapClicked) {
-            font.setColor(Color.RED);
-            font.draw(batch, "User clicked at - long: " + longitude + ", lat: " + latitude , WIDTH / 3f - 30, 50);
+            font.setColor(Color.GREEN);
+            font.draw(batch, "User clicked at - long: " + longitude + ", lat: " + latitude , rect.x + 20, rect.y + 35);
         }
         if(addedStation) {
             batch.setColor(Color.RED);
@@ -217,12 +225,7 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
         }
         batch.end();
 
-        Gdx.gl.glEnable(GL30.GL_BLEND);
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        drawAreas();
-        shapeRenderer.end();
-        Gdx.gl.glDisable(GL30.GL_BLEND);
+
     }
 
     private void drawStations(float delta) {
@@ -262,7 +265,11 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
 
         return table;
     }
-
+    private void drawMessage() {
+        shapeRenderer.setColor(0.5f, 0.5f, 0.5f, 0.7f);
+        rect = new Rectangle(WIDTH / 3f - 30, 75, 850, 50);
+        shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+    }
     private void drawAreas() {
         shapeRenderer.setColor(new Color(0, 1, 0, 0.5f));
 
@@ -369,8 +376,6 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
             int y = (int)(position.y / layer.getTileHeight());
             TiledMapTileLayer.Cell cell = layer.getCell(x, y);
             if (cell != null) {
-
-
                longitude = MapRasterTiles.tile2long(x + beginTile.x,ZOOM);
                latitude = MapRasterTiles.tile2lat(y + beginTile.y, ZOOM);
                mapClicked = true;
