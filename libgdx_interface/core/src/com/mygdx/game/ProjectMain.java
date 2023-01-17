@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -58,6 +59,7 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
     private Vector3 touchPosition;
     public BitmapFont font;
     private Rectangle rect;
+    private InputMultiplexer inputMultiplexer;
 
     private TiledMap tiledMap;
     private TiledMapRenderer tiledMapRenderer;
@@ -117,65 +119,16 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
         font = new BitmapFont();
         font.getData().setScale(2);
 
+        inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(stage);
         //Gdx.input.setInputProcessor(stage);
         stage.addActor(createDropDown());
 
-
         touchPosition = new Vector3();
-        Gdx.input.setInputProcessor(new GestureDetector(this));
+        inputMultiplexer.addProcessor(new GestureDetector(this));
+        Gdx.input.setInputProcessor(inputMultiplexer);
+       // Gdx.input.setInputProcessor(new GestureDetector(this));
 
-        Gdx.input.setInputProcessor(new InputProcessor() {
-            @Override
-            public boolean keyDown(int keycode) {
-                return false;
-            }
-
-            @Override
-            public boolean keyUp(int keycode) {
-                return false;
-            }
-
-            @Override
-            public boolean keyTyped(char character) {
-                return false;
-            }
-
-            @Override
-            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                // convert screen coordinates to world coordinates
-                Vector3 worldCoords = camera.unproject(new Vector3(screenX, screenY, 0));
-
-                Rectangle plusIcon = sprite.getBoundingRectangle();
-
-                // check if the texture was clicked
-                if (plusIcon.contains(worldCoords.x, worldCoords.y)) {
-                    Gdx.input.setInputProcessor(stage);
-                    stage.addActor(createUI());
-                }
-
-                return false;
-            }
-
-            @Override
-            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-                return false;
-            }
-
-            @Override
-            public boolean touchDragged(int screenX, int screenY, int pointer) {
-                return false;
-            }
-
-            @Override
-            public boolean mouseMoved(int screenX, int screenY) {
-                return false;
-            }
-
-            @Override
-            public boolean scrolled(float amountX, float amountY) {
-                return false;
-            }
-        });
 
         try {
             //in most cases, geolocation won't be in the center of the tile because tile borders are predetermined (geolocation can be at the corner of a tile)
@@ -486,14 +439,23 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
             int x = (int) (position.x / layer.getTileWidth());
             int y = (int)(position.y / layer.getTileHeight());
 
+            inputMultiplexer.addProcessor(stage);
+
             for (Station station : stations.list) {
                 PixelPosition marker = MapRasterTiles.getPixelPosition(station.lat, station.lng, MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
                 if (marker.x <= clickCoordinates.x && clickCoordinates.x <= marker.x + Assets.stationImg.getWidth() &&
                         marker.y <= clickCoordinates.y && clickCoordinates.y <= marker.y + Assets.stationImg.getHeight()) {
                     pickedStation = station;
-                    //Gdx.input.setInputProcessor(stage);
+                   // Gdx.input.setInputProcessor(stage);
                     stage.addActor(createData(station, theme, marker));
                 }
+            }
+            Rectangle plusIcon = sprite.getBoundingRectangle();
+
+            // check if the texture was clicked
+            if (plusIcon.contains(position.x, position.y)) {
+               // Gdx.input.setInputProcessor(stage);
+                stage.addActor(createUI());
             }
 
             TiledMapTileLayer.Cell cell = layer.getCell(x, y);

@@ -14,7 +14,8 @@ public class Assets {
     public static void load() {
         stationImg = new Texture("station.png");
         plusImg = new Texture("plus.png");
-        skin = new Skin(Gdx.files.internal("neon_skin/neon-ui.json"));
+        //skin = new Skin(Gdx.files.internal("neon_skin/neon-ui.json"));
+        skin = new Skin(Gdx.files.internal("clean-crispy-skin/clean-crispy-ui.json"));
     }
 
     public static void dispose() {
