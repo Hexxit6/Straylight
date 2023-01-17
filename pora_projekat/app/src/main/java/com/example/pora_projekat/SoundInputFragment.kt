@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.media.MediaRecorder
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +16,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.Navigation
 import com.example.pora_projekat.databinding.FragmentSoundInputBinding
+import com.example.pora_projekat.services.APIUtil
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-// TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -40,6 +41,9 @@ class SoundInputFragment : Fragment() {
     private var mediaRecorder:MediaRecorder = MediaRecorder()
     var currentTime: Date = Calendar.getInstance().getTime()
     var df: SimpleDateFormat = SimpleDateFormat("dd-MMM-yyyy hh:mm:ss", Locale.getDefault())
+
+    private var latitude: String? = "0"
+    private var longitude: String? = "0"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,9 +92,15 @@ class SoundInputFragment : Fragment() {
         var formattedDate: String = df.format(currentTime)
         binding.txtTime2.text = formattedDate
         setFragmentResultListener("requestKey") { key, bundle ->
-            val latitude = bundle.getString("latitude")
-            val longitude = bundle.getString("longitude")
+            latitude = bundle.getString("latitude")
+            longitude = bundle.getString("longitude")
             binding.txtViewLocation2.text = "$latitude $longitude"
+        }
+
+        binding.btnSave2.setOnClickListener {
+            APIUtil.uploadFile(getRecordingFilePath()!!, APIUtil.BASE_URL, latitude!!, longitude!!, APIUtil.MIME_MP3)
+            Toast.makeText(requireActivity(), "Audio file uploading..", Toast.LENGTH_SHORT).show()
+            Log.d("SoundInputFragment", "Audio file uploading..")
         }
 
     }

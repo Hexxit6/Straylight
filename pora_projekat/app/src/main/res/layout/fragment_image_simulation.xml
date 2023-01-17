@@ -150,7 +150,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/MaterialButtonGroup"
+            android:id="@+id/MBGSound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"

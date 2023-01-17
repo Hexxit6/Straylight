@@ -1,21 +1,18 @@
 package com.example.pora_projekat
 
-import android.Manifest
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.ContentValues
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.content.PermissionChecker.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.Navigation
@@ -46,6 +43,8 @@ class ImageInputFragment : Fragment(){
     var currentTime: Date = Calendar.getInstance().getTime()
     var df: SimpleDateFormat = SimpleDateFormat("dd-MMM-yyyy hh:mm:ss", Locale.getDefault())
 
+    private var latitude: String? = "0"
+    private var longitude: String? = "0"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,10 +76,16 @@ class ImageInputFragment : Fragment(){
         var formattedDate: String = df.format(currentTime)
         binding.txtTime.text = formattedDate
         setFragmentResultListener("requestKey") { key, bundle ->
-            val latitude = bundle.getString("latitude")
-            val longitude = bundle.getString("longitude")
+            latitude = bundle.getString("latitude")
+            longitude = bundle.getString("longitude")
             binding.txtViewLocation.text = "$latitude $longitude"
 
+        }
+
+        binding.btnSave.setOnClickListener {
+            APIUtil.uploadStream(image_url!!, APIUtil.BASE_URL, latitude!!, longitude!!, APIUtil.MIME_JPEG, requireActivity())
+            Toast.makeText(requireActivity(), "Image uploading..", Toast.LENGTH_SHORT).show()
+            Log.d("ImageInputFragment", "Image uploading..")
         }
     }
     fun openCamera() {
@@ -96,7 +101,6 @@ class ImageInputFragment : Fragment(){
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if(resultCode == RESULT_OK) {
             binding.txtViewUrl.text = image_url.toString()
-            // APIUtil.uploadFile(image_url!!.path.toString(), APIUtil.URL, APIUtil.MEDIA_TYPE_JPEG) // TODO: uncomment this
         }
     }
 

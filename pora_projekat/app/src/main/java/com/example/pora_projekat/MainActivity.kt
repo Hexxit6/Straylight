@@ -5,9 +5,13 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.pora_projekat.databinding.ActivityMainBinding
+import android.util.Log
+import com.example.pora_projekat.services.APIUtil
 import com.example.pora_projekat.services.AudioService
 import com.example.pora_projekat.services.AudioServiceSimulation
 import com.example.pora_projekat.services.ImageService
+import java.io.IOException
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
