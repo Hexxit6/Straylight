@@ -3,4 +3,15 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="access_token">pk.eyJ1IjoiYW5kamVsYTI5IiwiYSI6ImNsYzF5ZHR4bzA1c24zcW9hbHZqNWdkeWYifQ.aUJ3fh-OLaf7pezBPD98rQ</string>
+    <string name="text_add_event">Which pollutant or allergen is increased?</string>
+    <string-array name="pollutants_and_alergens_array">
+        <item>AQI</item>
+        <item>PM2_5</item>
+        <item>PM10</item>
+        <item>NO2</item>
+        <item>Birch</item>
+        <item>Ragweed</item>
+        <item>Mugwort</item>
+        <item>Olivetree</item>
+    </string-array>
 </resources>
