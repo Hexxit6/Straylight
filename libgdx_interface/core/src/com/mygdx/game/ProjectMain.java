@@ -26,10 +26,17 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.data.Station;
 import com.mygdx.game.data.Stations;
@@ -71,12 +78,17 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
     TextField stationName;
     TextButton addBtn;
 
+    TextButton backBtn;
+
     double longitude = 0;
     double latitude = 0;
     String newStationLat;
     String newStationLng;
     boolean mapClicked = false;
     boolean addedStation = false;
+
+    Station pickedStation;
+    String theme = "AQI";
 
     @Override
     public void create() {
@@ -101,6 +113,10 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
 
         font = new BitmapFont();
         font.getData().setScale(2);
+
+        //Gdx.input.setInputProcessor(stage);
+        stage.addActor(createDropDown());
+
 
         touchPosition = new Vector3();
         Gdx.input.setInputProcessor(new GestureDetector(this));
@@ -134,6 +150,8 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
                     stage.addActor(createUI());
                 }
 
+                handleInput();
+
                 return false;
             }
 
@@ -157,6 +175,7 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
                 return false;
             }
         });
+
 
         try {
             //in most cases, geolocation won't be in the center of the tile because tile borders are predetermined (geolocation can be at the corner of a tile)
@@ -190,7 +209,6 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
     public void render() {
         ScreenUtils.clear(0, 0, 0, 1);
 
-        handleInput();
 
         camera.update();
 
@@ -225,6 +243,9 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
             batch.draw(Assets.stationImg, marker.x, marker.y);
         }
     }
+
+
+
     private Actor createUI() {
         final Table table = new Table();
 
@@ -251,6 +272,99 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
             }
         });
 
+        return table;
+    }
+
+    private Actor createDropDown() {
+        final Table table = new Table();
+
+        table.setPosition(WIDTH/2f, HEIGHT/2f);
+        table.setFillParent(true);
+
+        table.add(new TextField("Choose filter", Assets.skin)).expandX().fillX().row();
+
+        // Create a new SelectBox
+        final SelectBox<String> selectBox = new SelectBox<String>(Assets.skin);
+        // Create a list of items to display in the SelectBox
+        Array<String> items = new Array<String>();
+        items.addAll("AQI", "PM2_5", "PM10", "NO2", "birch", "alder", "grasses", "ragweed", "mugwort", "olivetree");
+
+        // Set the items list to the SelectBox
+        selectBox.setItems(items);
+
+        // Set the selected item in the SelectBox
+        selectBox.setSelected("AQI");
+
+        // Add the SelectBox to a stage
+        table.addActor(selectBox);
+
+        selectBox.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                theme = selectBox.getSelected();
+            }
+        });
+
+        return table;
+    }
+
+    private Actor createData(Station station, String theme, PixelPosition marker) {
+        String data="0";
+        switch (theme) {
+            case "AQI":
+                data = String.valueOf(station.AQI);
+                break;
+            case "PM2_5":
+                data = String.valueOf(station.PM2_5);
+                break;
+            case "PM10":
+                data = String.valueOf(station.PM10);
+                break;
+            case "NO2" :
+                data = String.valueOf(station.NO2);
+                break;
+            case "birch" :
+                data = String.valueOf(station.birch);
+                break;
+            case "alder" :
+                data = String.valueOf(station.alder);
+                break;
+            case "grasses" :
+                data = String.valueOf(station.grasses);
+                break;
+            case "ragweed" :
+                data = String.valueOf(station.ragweed);
+                break;
+            case "mugwort" :
+                data = String.valueOf(station.mugwort);
+                break;
+            case "olivetree" :
+                data = String.valueOf(station.olivetree);
+                break;
+        };
+
+        final Table table = new Table();
+
+        //table.setPosition((float)station.lat + WIDTH/2f, (float)station.lng + HEIGHT/2f);
+
+        table.setPosition((float)marker.x, (float)marker.y);
+        //table.setFillParent(true);
+
+        TextField textField = new TextField(theme + ": " + data, Assets.skin);
+        textField.setAlignment(Align.center);
+        font.getData().setScale(2);
+        table.add(textField).expandX().fillX().center().row();
+        backBtn = new TextButton("BACK", Assets.skin);
+
+        table.add(textField).expandX().fillX().row();
+        table.add(backBtn).expandX().fillX().row();
+
+        backBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                table.remove();
+            }
+        });
         return table;
     }
 
@@ -346,10 +460,19 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
             Vector3 position = camera.unproject(clickCoordinates);
             int x = (int) (position.x / layer.getTileWidth());
             int y = (int)(position.y / layer.getTileHeight());
+
+            for (Station station : stations.list) {
+                PixelPosition marker = MapRasterTiles.getPixelPosition(station.lat, station.lng, MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
+                if (marker.x <= clickCoordinates.x && clickCoordinates.x <= marker.x + Assets.stationImg.getWidth() &&
+                        marker.y <= clickCoordinates.y && clickCoordinates.y <= marker.y + Assets.stationImg.getHeight()) {
+                    pickedStation = station;
+                    //Gdx.input.setInputProcessor(stage);
+                    stage.addActor(createData(station, theme, marker));
+                }
+            }
+
             TiledMapTileLayer.Cell cell = layer.getCell(x, y);
             if (cell != null) {
-
-
                longitude = MapRasterTiles.tile2long(x + beginTile.x,ZOOM);
                latitude = MapRasterTiles.tile2lat(y + beginTile.y, ZOOM);
                mapClicked = true;
