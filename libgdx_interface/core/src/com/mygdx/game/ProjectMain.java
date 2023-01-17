@@ -219,8 +219,10 @@ public class ProjectMain extends ApplicationAdapter implements GestureDetector.G
             font.draw(batch, "User clicked at - long: " + longitude + ", lat: " + latitude , rect.x + 20, rect.y + 35);
         }
         if(addedStation) {
-            batch.setColor(Color.RED);
-            stations.list.add(new Station(Double.parseDouble(newStationLat),Double.parseDouble(newStationLng)));
+            batch.setColor(Color.YELLOW);
+            PixelPosition marker = MapRasterTiles.getPixelPosition(Double.parseDouble(newStationLat),Double.parseDouble(newStationLng), MapRasterTiles.TILE_SIZE, ZOOM, beginTile.x, beginTile.y, HEIGHT);
+            batch.draw(Assets.stationImg, marker.x-(Assets.stationImg.getWidth()/2), marker.y-(Assets.stationImg.getHeight()/2));
+          //  stations.list.add(new Station(Double.parseDouble(newStationLat),Double.parseDouble(newStationLng)));
             batch.setColor(Color.WHITE);
         }
         batch.end();
