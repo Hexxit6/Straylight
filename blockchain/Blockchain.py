@@ -78,3 +78,16 @@ class Blockchain:
             self.chain = other_chain
             return True
         return False
+
+    def adjust_difficulty(self):
+        if len(self.chain) > self.diff_interval:
+            prev_adj_block = self.chain[-self.diff_interval]
+            time_expected = self.generation_time * self.diff_interval
+            time_taken = (self.chain[-1].timestamp - prev_adj_block.timestamp).seconds
+
+            if time_taken < (time_expected//2):
+                self.difficulty = prev_adj_block.diff + 1
+            elif time_taken > (time_expected*2):
+                self.difficulty = prev_adj_block.diff - 1
+            else:
+                self.difficulty = prev_adj_block.diff
