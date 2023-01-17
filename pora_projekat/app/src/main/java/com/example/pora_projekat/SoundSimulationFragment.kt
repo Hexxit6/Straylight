@@ -1,14 +1,18 @@
 package com.example.pora_projekat
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.Navigation
 import com.example.pora_projekat.databinding.FragmentImageSimulationBinding
 import com.example.pora_projekat.databinding.FragmentSoundSimulationBinding
+import com.example.pora_projekat.services.AudioService
+import com.example.pora_projekat.services.AudioServiceSimulation
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,6 +30,9 @@ class SoundSimulationFragment : Fragment() {
     private var param2: String? = null
 
     private lateinit var binding:FragmentSoundSimulationBinding
+
+    private var latitude: String? = "0"
+    private var longitude: String? = "0"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,10 +58,41 @@ class SoundSimulationFragment : Fragment() {
             Navigation.findNavController(view).navigate(R.id.action_soundSimulationFragment_to_mapFragment)
         }
         setFragmentResultListener("requestKey") { key, bundle ->
-            val latitude = bundle.getString("latitude")
-            val longitude = bundle.getString("longitude")
+            latitude = bundle.getString("latitude")
+            longitude = bundle.getString("longitude")
             binding.textViewGetLocation.text = "$latitude $longitude"
+        }
 
+        binding.btnOff.setOnClickListener {
+            requireActivity().stopService(Intent(requireActivity(), AudioServiceSimulation::class.java))
+            requireActivity().stopService(Intent(requireActivity(), AudioService::class.java))
+            Toast.makeText(requireActivity(), "Services stopped!", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnSimulation.setOnClickListener {
+            Intent(requireActivity(), AudioServiceSimulation::class.java).also { intent ->
+                intent.putExtra(AudioService.EXTRA_FROM, 0f)
+                intent.putExtra(AudioService.EXTRA_TO, 24f)
+                intent.putExtra(AudioService.EXTRA_INTERVAL, 30)
+                intent.putExtra(AudioService.EXTRA_DURATION, 5)
+                intent.putExtra(AudioService.EXTRA_LATITUDE, 0f)
+                intent.putExtra(AudioService.EXTRA_LONGITUDE, 0f)
+                requireActivity().startService(intent)
+            }
+            Toast.makeText(requireActivity(), "Simulation started!", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.btnOn.setOnClickListener {
+            Intent(requireActivity(), AudioService::class.java).also { intent ->
+                intent.putExtra(AudioService.EXTRA_FROM, 0f)
+                intent.putExtra(AudioService.EXTRA_TO, 24f)
+                intent.putExtra(AudioService.EXTRA_INTERVAL, 30)
+                intent.putExtra(AudioService.EXTRA_DURATION, 5)
+                intent.putExtra(AudioService.EXTRA_LATITUDE, 0f)
+                intent.putExtra(AudioService.EXTRA_LONGITUDE, 0f)
+                requireActivity().startService(intent)
+            }
+            Toast.makeText(requireActivity(), "Service started!", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -1,21 +1,16 @@
 package com.example.pora_projekat.services
 
-import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
-import android.media.MediaRecorder
-import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.example.pora_projekat.R
-import java.io.File
 import java.io.IOException
 import java.util.Timer
 import java.util.TimerTask
@@ -67,9 +62,8 @@ class AudioServiceSimulation : Service() {
                 if (!recording) {
                     try {
                         recording = true
-                        filepath = applicationContext.assets.openFd("audio_file.3gp").fileDescriptor.toString()
-                        Log.d("AudioServiceSimulation", "GOT THE RESOURCE PATH: $filepath") // TODO: remove
-
+                        val mode = APIUtil.SimulationMode.values().toList().subList(2,4).shuffled().first()
+                        APIUtil.uploadSimulation(APIUtil.BASE_URL, latitude.toString(), longitude.toString(), mode)
                         timer = Timer()
                         timer?.schedule(object : TimerTask() {
                             override fun run() {
@@ -94,7 +88,6 @@ class AudioServiceSimulation : Service() {
             recording = false
             timer?.cancel()
             timer = null
-            APIUtil.uploadFile(filepath, APIUtil.URL, APIUtil.MEDIA_TYPE_MP3)
         }
     }
 

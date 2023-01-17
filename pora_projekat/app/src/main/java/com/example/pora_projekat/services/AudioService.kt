@@ -5,11 +5,9 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.media.MediaRecorder
 import android.os.Build
-import android.os.Environment
 import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -112,7 +110,7 @@ class AudioService : Service() {
             recording = false
             timer?.cancel()
             timer = null
-            APIUtil.uploadFile(filepath, APIUtil.URL, APIUtil.MEDIA_TYPE_MP3)
+            APIUtil.uploadFile(filepath, APIUtil.BASE_URL, longitude.toString(), latitude.toString(), APIUtil.MIME_MP3)
         }
     }
 
