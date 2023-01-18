@@ -54,9 +54,9 @@ class MainActivity : AppCompatActivity() {
         // }
 
 
-        binding.addEvent.setOnClickListener {
-            val intent = Intent(this, EventActivity::class.java)
-            startActivity(intent)
-        }
+//        binding.addEvent.setOnClickListener {
+//            val intent = Intent(this, EventActivity::class.java)
+//            startActivity(intent)
+//        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.pora_projekat
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -56,6 +57,10 @@ class HomeFragment : Fragment() {
         }
         binding.constraintLayoutSoundSimulation.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_soundSimulationFragment)
+        }
+        binding.addEvent.setOnClickListener {
+            val intent = Intent(activity, EventActivity::class.java)
+            startActivity(intent)
         }
     }
 
