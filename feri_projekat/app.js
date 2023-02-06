@@ -26,6 +26,7 @@ var dataRouter = require('./routes/dataRoutes');
 var commentRouter = require('./routes/commentRoutes');
 var settingsRouter = require('./routes/settingsRoutes');
 var adminRouter = require('./routes/adminRoutes');
+var neuralnetRouter = require('./routes/neuralnetRoutes');
 
 var app = express();
 
@@ -69,6 +70,7 @@ app.use('/data', dataRouter);
 app.use('/comment', commentRouter);
 app.use('/settings', settingsRouter); 
 app.use('/admin', adminRouter); 
+app.use('/neuralnet', neuralnetRouter); 
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
