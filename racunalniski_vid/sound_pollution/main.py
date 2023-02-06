@@ -17,7 +17,6 @@ def extract_features(filename):
     rms = librosa.feature.rms(y=sound).mean()
     return [mean, std, skew, kurtosis, zero_crossing_rate, mfccs, rms]
 
-
 with open('sound_data.csv') as f:
     reader = csv.reader(f)
     headers = next(reader)
@@ -26,7 +25,7 @@ with open('sound_data.csv') as f:
 X = [row[:-1] for row in data]
 y = [row[-1] for row in data]
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
 X_train = np.array(X_train).astype(float)
 X_test = np.array(X_test).astype(float)
@@ -40,12 +39,18 @@ print("Accuracy:", accuracy)
 train_predict = model.predict(X_train)
 test_predict = model.predict(X_test)
 
-print(classification_report(y_test, test_predict))
+# np.save('X_train.npy', X_train)
+# np.save('y_train.npy', y_train)
+
+print("Training data classification report:")
 print(classification_report(y_train, train_predict))
+print("Test data classification report:")
+print(classification_report(y_test, test_predict))
 
-# -------------------------------------------
-
-my_sound = [extract_features('traffic.mp3')]
+# --------------------------------------------------
+my_sound = [extract_features('steps.mp3')]
 
 prediction = model.predict(my_sound)
 print("Prediction for my sound:", prediction)
+
+
