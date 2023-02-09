@@ -115,7 +115,7 @@ object APIUtil {
         AUDIO_POLLUTED
     }
 
-    val BASE_URL = "http://straylight.ignorit.al:9001/"
+    val BASE_URL = "http://straylight.ignorit.al:9001/neuralnet/"
     val MIME_JPEG = "image/jpeg".toMediaType()
     val MIME_MP3 = "audio/mpeg".toMediaType()
     val MIME_JSON = "application/json".toMediaType()

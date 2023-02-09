@@ -63,7 +63,7 @@ class AudioServiceSimulation : Service() {
                     try {
                         recording = true
                         val mode = APIUtil.SimulationMode.values().toList().subList(2,4).shuffled().first()
-                        APIUtil.uploadSimulation(APIUtil.BASE_URL, latitude.toString(), longitude.toString(), mode)
+                        APIUtil.uploadSimulation(APIUtil.BASE_URL + "simulation", latitude.toString(), longitude.toString(), mode)
                         timer = Timer()
                         timer?.schedule(object : TimerTask() {
                             override fun run() {

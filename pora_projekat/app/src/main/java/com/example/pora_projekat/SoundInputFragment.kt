@@ -98,7 +98,7 @@ class SoundInputFragment : Fragment() {
         }
 
         binding.btnSave2.setOnClickListener {
-            APIUtil.uploadFile(getRecordingFilePath()!!, APIUtil.BASE_URL, latitude!!, longitude!!, APIUtil.MIME_MP3)
+            APIUtil.uploadFile(getRecordingFilePath()!!, APIUtil.BASE_URL + "sound", latitude!!, longitude!!, APIUtil.MIME_MP3)
             Toast.makeText(requireActivity(), "Audio file uploading..", Toast.LENGTH_SHORT).show()
             Log.d("SoundInputFragment", "Audio file uploading..")
         }

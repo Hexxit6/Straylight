@@ -110,7 +110,7 @@ class AudioService : Service() {
             recording = false
             timer?.cancel()
             timer = null
-            APIUtil.uploadFile(filepath, APIUtil.BASE_URL, longitude.toString(), latitude.toString(), APIUtil.MIME_MP3)
+            APIUtil.uploadFile(filepath, APIUtil.BASE_URL + "sound", longitude.toString(), latitude.toString(), APIUtil.MIME_MP3)
         }
     }
 
